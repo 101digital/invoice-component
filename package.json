@@ -5,7 +5,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/101digital/customer-component.git"
+    "url": "https://github.com/101digital/invoice-component.git"
   },
   "main": "index.js",
   "types": "index.d.ts",
