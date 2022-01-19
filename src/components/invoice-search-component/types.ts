@@ -12,6 +12,7 @@ export type InvoiceSearchComponentProps = {
   onBackPressed: () => void;
   currencyCode: string;
   onInvoiceDetail: (invoiceId: string) => void;
+  onEditInvoice: (invoiceId: string) => void;
   style?: InvoiceSearchComponentStyles;
   SearchBox?: {
     props?: {

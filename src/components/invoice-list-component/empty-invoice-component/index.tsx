@@ -44,12 +44,12 @@ const EmptyInvoicesComponent = (props: EmptyInvoicesProps) => {
           {noInvoiceIcon ?? <EmptyInvoiceIcon size={96} />}
           <Text style={styles.titleTextStyle}>
             {isSearch
-              ? i18n?.t('invoice_component.lbl_no_results') ?? 'No results'
-              : i18n?.t('invoice_component.lbl_no_invoices') ?? 'No invoices'}
+              ? i18n?.t('invoice_search_component.lbl_no_results') ?? 'No results'
+              : i18n?.t('invoice_list_component.lbl_no_invoices') ?? 'No invoices'}
           </Text>
           {!isSearch && (
             <Text style={styles.messageTextStyle}>
-              {i18n?.t('invoice_component.msg_no_invoices') ??
+              {i18n?.t('invoice_list_component.msg_no_invoices') ??
                 'Use the Create invoice button to create an invoice'}
             </Text>
           )}
@@ -61,7 +61,7 @@ const EmptyInvoicesComponent = (props: EmptyInvoicesProps) => {
             >
               {plusIcon ?? <PlusIcon size={20} color={colors.primaryColor} />}
               <Text style={styles.createButtonTextStyle}>
-                {i18n?.t('invoice_component.btn_create_invoice') ?? 'Create invoice'}
+                {i18n?.t('invoice_list_component.btn_create_invoice') ?? 'Create invoice'}
               </Text>
             </TouchableOpacity>
           )}

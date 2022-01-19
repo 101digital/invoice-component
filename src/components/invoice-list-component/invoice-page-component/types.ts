@@ -14,6 +14,7 @@ export type InvoicePageComponentProps = {
   indicatorColor?: string;
   sectionDateFormat?: string;
   style?: InvoicePageComponentStyles;
+  onEditInvoice: (invoiceId: string) => void;
   onInvoiceDetail: (invoiceId: string) => void;
   onCreateInvoice?: () => void;
   onShareInvoice: (invoice: Invoice) => void;

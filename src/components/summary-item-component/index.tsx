@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import { SummaryItemComponentProps, SummaryItemComponentStyles } from './types';
 import useMergeStyles from './theme';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { ArrowRightIcon } from '../../../assets';
+import { AddItemIcon, ArrowRightIcon } from '../../assets';
 import { ThemeContext } from 'react-native-theme-component';
+import { isEmpty } from 'lodash';
 
 const SummaryItemComponent = (props: SummaryItemComponentProps) => {
   const {
@@ -16,9 +17,11 @@ const SummaryItemComponent = (props: SummaryItemComponentProps) => {
     subTitle,
     onPressedAmount,
     arrowRightIcon,
+    onAddValue,
+    addIcon,
   } = props;
   const styles: SummaryItemComponentStyles = useMergeStyles(style);
-  const { colors } = useContext(ThemeContext);
+  const { colors, i18n } = useContext(ThemeContext);
   const _primaryColor = primaryColor ?? '#f4f8fb';
   const _secondaryColor = secondaryColor ?? '#ffffff';
 
@@ -35,8 +38,24 @@ const SummaryItemComponent = (props: SummaryItemComponentProps) => {
           {subTitle && <Text style={styles.subTitleStyle}>{` ${subTitle}`}</Text>}
         </Text>
       </View>
-      <TouchableOpacity activeOpacity={0.8} onPress={onPressedAmount}>
-        <Text style={styles.amountStyle}>{amount}</Text>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => {
+          onPressedAmount?.();
+          onAddValue?.();
+        }}
+        style={styles.amountContainerStyle}
+      >
+        {isEmpty(amount) ? (
+          <>
+            {addIcon ?? <AddItemIcon color={colors.primaryColor} />}
+            <Text style={styles.addButtonTitleStyle}>
+              {i18n?.t('create_invoice_component.btn_add_extention') ?? 'Add'}
+            </Text>
+          </>
+        ) : (
+          <Text style={styles.amountStyle}>{amount}</Text>
+        )}
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.arrowRightContainer}

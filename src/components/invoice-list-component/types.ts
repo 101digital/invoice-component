@@ -15,6 +15,7 @@ export type InvoiceListComponentProps = {
   onSearchInvoice?: () => void;
   onInvoiceDetail: (invoiceId: string) => void;
   onCreateInvoice: () => void;
+  onEditInvoice: (invoiceId: string) => void;
   EmptyInvoice?: {
     props?: {
       noInvoiceIcon?: ReactNode;

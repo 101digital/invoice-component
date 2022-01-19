@@ -31,7 +31,7 @@ const InvoicePaymentComponent = (props: InvoicePaymentComponentProps) => {
     deletePayment,
   } = useContext(InvoiceContext);
   const [isShowPayment, setShowPayment] = useState(false);
-  const { i18n } = useContext(ThemeContext);
+  const { i18n, colors } = useContext(ThemeContext);
   const [_invoice, setInvoice] = useState(invoice);
   const [paymentItem, setPaymentItem] = useState<PaymentItem | undefined>(undefined);
   const [isConfirmDelete, setConfirmDelete] = useState(false);
@@ -107,7 +107,7 @@ const InvoicePaymentComponent = (props: InvoicePaymentComponentProps) => {
                     activeOpacity={0.8}
                     style={styles.addButtonContainerStyle}
                   >
-                    {addItemIcon ?? <AddItemIcon color="#000000" />}
+                    {addItemIcon ?? <AddItemIcon size={14} color={colors.primaryColor} />}
                     <Text style={styles.addButtonTitleStyle}>
                       {i18n?.t('invoice_payment_component.btn_add_new') ?? 'Add new'}
                     </Text>

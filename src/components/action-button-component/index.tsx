@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { ActionButtonComponentProps, ActionButtonComponentStyles } from './types';
 import useMergeStyles from './theme';
-import { ArrowRightIcon } from '../../../assets';
+import { ArrowRightIcon } from '../../assets';
 import { ThemeContext } from 'react-native-theme-component';
 
 const ActionButtonComponent = (props: ActionButtonComponentProps) => {

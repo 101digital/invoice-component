@@ -34,10 +34,10 @@ const FilterBarComponent = (props: FilterBarComponentProps) => {
   return (
     <View style={styles.containerStyle}>
       <Text style={styles.labelStyle}>
-        {i18n?.t('invoice_component.lbl_filtered_by') ?? 'Filtered by'}
+        {i18n?.t('invoice_search_component.lbl_filtered_by') ?? 'Filtered by'}
       </Text>
       <ScrollView
-        keyboardShouldPersistTaps="handled"
+        keyboardShouldPersistTaps='handled'
         horizontal={true}
         showsHorizontalScrollIndicator={false}
       >

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { SearchHeaderComponentProps, SearchHeaderComponentStyles } from './types';
 import useMergeStyles from './theme';
 import { BackIcon, SearchIcon, SettingsIcon } from '../../../assets';
@@ -41,13 +41,13 @@ const SearchHeaderComponent = (props: SearchHeaderComponentProps) => {
   return (
     <>
       <View style={styles.containerStyle}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={innerStyles.row}>
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.leftButtonContainerStyle}
             onPress={onBackPressed}
           >
-            {backIcon ?? <BackIcon color="#000000" />}
+            {backIcon ?? <BackIcon color='#000000' />}
           </TouchableOpacity>
           <View style={styles.searchContainerStyle}>
             <View style={styles.iconSearchContainerStyle}>
@@ -60,9 +60,9 @@ const SearchHeaderComponent = (props: SearchHeaderComponentProps) => {
                 setKey(text);
                 _onSearch(text);
               }}
-              placeholder={i18n?.t('customer_component.plh_search') ?? 'Search'}
+              placeholder={i18n?.t('invoice_search_component.plh_search') ?? 'Search'}
               placeholderTextColor={placeholderColor ?? '#8b8b8b'}
-              textAlignVertical="center"
+              textAlignVertical='center'
               autoFocus
             />
           </View>
@@ -108,5 +108,11 @@ const SearchHeaderComponent = (props: SearchHeaderComponentProps) => {
     </>
   );
 };
+
+const innerStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+  },
+});
 
 export default SearchHeaderComponent;

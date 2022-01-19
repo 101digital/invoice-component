@@ -34,9 +34,9 @@ const FilterModalComponent = (props: FilterModalComponentProps) => {
   const [startDate, setStartDate] = useState<string | undefined>(undefined);
   const [endDate, setEndDate] = useState<string | undefined>(undefined);
   const _dateFormat = dateFormat ?? 'DD MMM YYYY';
-  const { minAmount, maxAmount } = InvoiceService.instance().getMaxMinAmount();
+  const { minAmount, maxFilterAmount } = InvoiceService.instance().getMaxMinAmount();
   const [lowAmount, setLowAmount] = useState(minAmount);
-  const [highAmount, setHighAmount] = useState(maxAmount);
+  const [highAmount, setHighAmount] = useState(maxFilterAmount);
   const [isShowDateRange, setShowDateRange] = useState(false);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const FilterModalComponent = (props: FilterModalComponentProps) => {
     }
     if (initParam.fromTotalAmount === undefined && initParam.toTotalAmount === undefined) {
       setLowAmount(0);
-      setHighAmount(maxAmount);
+      setHighAmount(maxFilterAmount);
     }
   }, [initParam]);
 
@@ -112,22 +112,22 @@ const FilterModalComponent = (props: FilterModalComponentProps) => {
     let name;
     switch (date) {
       case 1:
-        name = i18n.t('invoice_component.lbl_today');
+        name = i18n.t('invoice_search_component.lbl_today');
         break;
       case 2:
-        name = i18n.t('invoice_component.lbl_this_week');
+        name = i18n.t('invoice_search_component.lbl_this_week');
         break;
       case 3:
-        name = i18n.t('invoice_component.lbl_this_month');
+        name = i18n.t('invoice_search_component.lbl_this_month');
         break;
       case 4:
-        name = i18n.t('invoice_component.lbl_this_year');
+        name = i18n.t('invoice_search_component.lbl_this_year');
         break;
       case 5:
         name = getShortDate();
         break;
       default:
-        name = i18n.t('invoice_component.lbl_all');
+        name = i18n.t('invoice_search_component.lbl_all');
         break;
     }
     return {
@@ -169,7 +169,7 @@ const FilterModalComponent = (props: FilterModalComponentProps) => {
     if (date !== 0) {
       tags.push(getDateName());
     }
-    if (lowAmount !== 0 || highAmount !== maxAmount) {
+    if (lowAmount !== 0 || highAmount !== maxFilterAmount) {
       tags.push(getAmount());
       param = { ...param, fromTotalAmount: lowAmount, toTotalAmount: highAmount };
     }
@@ -203,79 +203,83 @@ const FilterModalComponent = (props: FilterModalComponentProps) => {
         <View style={styles.containerStyle}>
           <View style={styles.headerContainerStyle}>
             <Text style={styles.headerTitleStyle}>
-              {i18n?.t('invoice_component.lbl_filter') ?? 'Filter'}
+              {i18n?.t('invoice_search_component.lbl_filter') ?? 'Filter'}
             </Text>
           </View>
           <Text style={styles.labelStyle}>
-            {i18n?.t('invoice_component.lbl_status') ?? 'Status'}
+            {i18n?.t('invoice_search_component.lbl_status') ?? 'Status'}
           </Text>
           <View style={styles.itemListContainerStyle}>
             {_renderSectionItem(
-              i18n?.t('invoice_component.lbl_all') ?? 'All',
+              i18n?.t('invoice_search_component.lbl_all') ?? 'All',
               status === InvoiceStatusType.all,
               () => setStatus(InvoiceStatusType.all)
             )}
             {_renderSectionItem(
-              i18n?.t('invoice_component.lbl_paid_invoices') ?? 'Paid',
+              i18n?.t('invoice_search_component.lbl_paid_invoices') ?? 'Paid',
               status === InvoiceStatusType.paid,
               () => setStatus(InvoiceStatusType.paid)
             )}
             {_renderSectionItem(
-              i18n?.t('invoice_component.lbl_due_invoices') ?? 'Due',
+              i18n?.t('invoice_search_component.lbl_due_invoices') ?? 'Due',
               status === InvoiceStatusType.due,
               () => setStatus(InvoiceStatusType.due)
             )}
             {_renderSectionItem(
-              i18n?.t('invoice_component.lbl_overdue_invoices') ?? 'Overdue',
+              i18n?.t('invoice_search_component.lbl_overdue_invoices') ?? 'Overdue',
               status === InvoiceStatusType.overDue,
               () => setStatus(InvoiceStatusType.overDue),
               true
             )}
           </View>
           <Text style={styles.labelStyle}>
-            {i18n?.t('invoice_component.lbl_invoice_date') ?? 'Invoice date'}
+            {i18n?.t('invoice_search_component.lbl_invoice_date') ?? 'Invoice date'}
           </Text>
           <View style={styles.itemListContainerStyle}>
-            {_renderSectionItem(i18n?.t('invoice_component.lbl_all') ?? 'All', date === 0, () =>
-              setDate(0)
-            )}
-            {_renderSectionItem(i18n?.t('invoice_component.lbl_today') ?? 'Today', date === 1, () =>
-              setDate(1)
+            {_renderSectionItem(
+              i18n?.t('invoice_search_component.lbl_all') ?? 'All',
+              date === 0,
+              () => setDate(0)
             )}
             {_renderSectionItem(
-              i18n?.t('invoice_component.lbl_this_week') ?? 'This week',
+              i18n?.t('invoice_search_component.lbl_today') ?? 'Today',
+              date === 1,
+              () => setDate(1)
+            )}
+            {_renderSectionItem(
+              i18n?.t('invoice_search_component.lbl_this_week') ?? 'This week',
               date === 2,
               () => setDate(2)
             )}
             {_renderSectionItem(
-              i18n?.t('invoice_component.lbl_this_month') ?? 'This month',
+              i18n?.t('invoice_search_component.lbl_this_month') ?? 'This month',
               date === 3,
               () => setDate(3)
             )}
             {_renderSectionItem(
-              i18n?.t('invoice_component.lbl_this_year') ?? 'This year',
+              i18n?.t('invoice_search_component.lbl_this_year') ?? 'This year',
               date === 4,
               () => setDate(4)
             )}
             {_renderSectionItem(
               date === 5
                 ? getShortDate()
-                : i18n?.t('invoice_component.lbl_custom_date') ?? 'Custom date',
+                : i18n?.t('invoice_search_component.lbl_custom_date') ?? 'Custom date',
               date === 5,
               toggleDateRangeModal,
               true
             )}
           </View>
           <Text style={styles.labelStyle}>
-            {i18n?.t('invoice_component.lbl_invoice_amount') ?? 'Invoice amount'}
+            {i18n?.t('invoice_search_component.lbl_invoice_amount') ?? 'Invoice amount'}
           </Text>
           <View style={styles.sliderContainerStyle}>
             <RangeSliderComponent
               activeColor={sliderActiveColor}
               inActiveColor={sliderInActiveColor}
               step={5}
-              min={0}
-              max={maxAmount}
+              min={minAmount}
+              max={maxFilterAmount}
               initLow={lowAmount}
               initHigh={highAmount}
               onValueChanged={(low: number, high: number) => {
@@ -288,8 +292,8 @@ const FilterModalComponent = (props: FilterModalComponentProps) => {
           <View style={styles.footerContainerStyle}>
             <Button
               onPress={onCancel}
-              label={i18n?.t('invoice_component.btn_cancel') ?? 'Cancel'}
-              variant="secondary"
+              label={i18n?.t('invoice_search_component.btn_cancel') ?? 'Cancel'}
+              variant='secondary'
               style={
                 style?.cancelButtonStyle ?? {
                   secondaryContainerStyle: {
@@ -301,7 +305,7 @@ const FilterModalComponent = (props: FilterModalComponentProps) => {
             />
             <Button
               onPress={handleApply}
-              label={i18n?.t('invoice_component.btn_apply') ?? 'Apply'}
+              label={i18n?.t('invoice_search_component.btn_apply') ?? 'Apply'}
               style={
                 style?.applyButtonStyle ?? {
                   primaryContainerStyle: {

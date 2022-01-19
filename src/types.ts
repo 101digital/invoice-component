@@ -118,17 +118,6 @@ export interface BankAccountReference {
   accountName: string;
 }
 
-export interface ItemInvoiceReference {
-  itemReference?: string;
-  description: string;
-  quantity: number;
-  amount?: number;
-  rate: number;
-  orderIndex?: number;
-  itemName: string;
-  itemUOM?: string;
-  extensions?: Extension[];
-}
 export interface Extension {
   addDeduct: AddDeduct;
   value: number;
@@ -204,4 +193,41 @@ export interface PaymentItem {
 export interface PaymentType {
   label: string;
   value: string;
+}
+
+export interface CustomerParams {
+  id: string;
+  name: string;
+  dueDatePeriod?: number;
+}
+
+export interface ItemInvoiceReference {
+  id?: string;
+  itemReference?: string;
+  description?: string;
+  quantity: number;
+  amount?: number;
+  rate: number;
+  orderIndex?: number;
+  itemName: string;
+  itemUOM?: string;
+  extensions?: Extension[];
+}
+
+export interface ItemInvoiceData {
+  id: string;
+  itemName: string;
+  quantity: number;
+  amount: number;
+  discount?: string;
+  itemUOM?: string;
+  extensions?: Extension[];
+}
+
+export interface DocumentData {
+  id?: string;
+  content: string;
+  contentType: string;
+  type: string;
+  name: string;
 }

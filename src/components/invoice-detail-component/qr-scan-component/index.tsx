@@ -11,7 +11,7 @@ import {
 import Modal from 'react-native-modal';
 import { QrScanComponentProps, QrScanComponentStyles } from './types';
 import useMergeStyles from './theme';
-import { CloseIcon } from '../../../assets';
+import { CloseIcon, images } from '../../../assets';
 import { showMessage, ThemeContext, useCurrencyFormat } from 'react-native-theme-component';
 import { InvoiceContext } from '../../../context/invoice-context';
 import QRCode from 'react-native-qrcode-svg';
@@ -44,7 +44,8 @@ const QRScanComponent = (props: QrScanComponentProps) => {
   useEffect(() => {
     if (errorLoadShareLink) {
       showMessage({
-        message: i18n?.t('invoice_component.msg_error_loading_qr') ?? 'Error while loading QR code',
+        message:
+          i18n?.t('invoice_detail_component.msg_error_loading_qr') ?? 'Error while loading QR code',
         backgroundColor: '#ff0000',
       });
       onClose();
@@ -64,8 +65,8 @@ const QRScanComponent = (props: QrScanComponentProps) => {
     <Modal
       deviceHeight={deviceHeight}
       isVisible={isVisible}
-      animationIn="slideInUp"
-      animationOut="slideOutDown"
+      animationIn='slideInUp'
+      animationOut='slideOutDown'
       onBackButtonPress={onClose}
       onBackdropPress={onClose}
       style={{ justifyContent: 'center', margin: 0 }}
@@ -74,7 +75,7 @@ const QRScanComponent = (props: QrScanComponentProps) => {
       <View style={styles.containerStyle}>
         <View style={styles.rowItemContainerStyle}>
           <Text style={styles.headerTitleStyle}>
-            {i18n?.t('invoice_component.lbl_scan_qr_to_pay') ?? 'Scan QR to pay'}
+            {i18n?.t('invoice_detail_component.lbl_scan_qr_to_pay') ?? 'Scan QR to pay'}
           </Text>
           <TouchableOpacity
             onPress={onClose}
@@ -90,7 +91,7 @@ const QRScanComponent = (props: QrScanComponentProps) => {
           <View style={styles.qrContainerStyle}>
             <ImageBackground
               style={styles.qrFrameImageStyle}
-              source={qrFrameSource ?? require('../../../assets/qr-window.png')}
+              source={qrFrameSource ?? images.qrFrame}
             >
               {shareLink && <QRCode value={shareLink.link} size={220} />}
             </ImageBackground>
@@ -98,13 +99,13 @@ const QRScanComponent = (props: QrScanComponentProps) => {
         )}
         <View style={styles.rowItemContainerStyle}>
           <Text style={styles.invoiceNumberLabelStyle}>
-            {i18n?.t('invoice_component.lbl_invoice_number') ?? 'Invoice number'}
+            {i18n?.t('invoice_detail_component.lbl_invoice_number') ?? 'Invoice number'}
           </Text>
           <Text style={styles.invoiceNumberValueStyle}>{`#${invoiceDetail?.invoiceNumber}`}</Text>
         </View>
         <View style={styles.rowItemContainerStyle}>
           <Text style={styles.amountLabelStyle}>
-            {i18n?.t('invoice_component.lbl_total_amount') ?? 'Total amount'}
+            {i18n?.t('invoice_detail_component.lbl_total_amount') ?? 'Total amount'}
           </Text>
           <Text style={styles.amountValueStyle}>
             {useCurrencyFormat(invoiceDetail?.totalAmount ?? 0, invoiceDetail?.currency ?? 'USD')}

@@ -32,6 +32,7 @@ const AddPaymentComponent = (props: AddPaymentComponentProps) => {
     dateFormat,
     arrowDownIcon,
     calendarIcon,
+    closeIcon,
   } = props;
   const styles: AddPaymentComponentStyles = useMergeStyles(style);
   const _spaceTop = topSpacer ?? (isIphoneX() ? 60 : 50);
@@ -54,6 +55,7 @@ const AddPaymentComponent = (props: AddPaymentComponentProps) => {
   const [transactionDate, setTransactionDate] = useState(new Date());
   const [paymentTypePosY, setPaymentTypePosY] = useState(0);
   const [isShowPaymentType, setShowPaymentType] = useState(false);
+  const _activeBorderColor = activeBorderColor ?? '#E6E6E6';
 
   useEffect(() => {
     if (isAddedPaymentSuccess || isUpdatedPaymentSuccess || isDeletedPaymentSuccess) {
@@ -112,112 +114,155 @@ const AddPaymentComponent = (props: AddPaymentComponentProps) => {
   const renderForm = (formProps: FormikProps<AddPaymentData>) => {
     return (
       <>
-        <Text style={styles.labelTextStyle}>
-          {i18n?.t('invoice_payment_component.lbl_payment_types') ?? 'Payment type'}
-        </Text>
-        <TouchableOpacity activeOpacity={1} onPress={togglePaymentType}>
-          <InputField
-            name={'paymentType'}
-            activeBorderColor={activeBorderColor ?? '#FOF3F8'}
-            editable={false}
-            pointerEvents="none"
-            textAlignVertical="center"
-            suffixIcon={
-              <View style={styles.suffixIconStyle}>
-                {arrowDownIcon ?? <ArrowDownIcon size={15} color={colors.primaryColor} />}
-              </View>
-            }
-          />
-        </TouchableOpacity>
-        <View
-          onLayout={(event) => {
-            if (paymentTypePosY === 0) {
-              const layout = event.nativeEvent.layout;
-              setPaymentTypePosY(layout?.y + layout.height);
-            }
-          }}
-        />
-        {isShowPaymentType && (
-          <View style={[styles.paymentTypeContainerStyle, { top: paymentTypePosY }]}>
-            <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-              {_paymentTypes.map((item) => (
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  key={item.value}
-                  style={styles.paymentTypeItemContainerStyle}
-                  onPress={() => {
-                    formProps.setFieldValue('paymentType', item.value);
-                    togglePaymentType();
-                  }}
-                >
-                  <Text style={styles.paymentTypeItemTextStyle}>{item.value}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
-        <View
-          onTouchStart={() => {
-            setShowPaymentType(false);
-          }}
+        <KeyboardAwareScrollView
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          enableResetScrollToCoords={false}
+          keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
+          style={styles.contentContainerStyle}
+          enableOnAndroid
+          scrollEnabled={!isShowPaymentType}
+          extraScrollHeight={-100}
         >
           <Text style={styles.labelTextStyle}>
-            {i18n?.t('invoice_payment_component.lbl_amount') ?? 'Amount'}
+            {i18n?.t('invoice_payment_component.lbl_payment_types') ?? 'Payment type'}
           </Text>
-          <InputField
-            type={'money'}
-            name={'amount'}
-            keyboardType="decimal-pad"
-            returnKeyType="done"
-            activeBorderColor={activeBorderColor ?? '#FOF3F8'}
-            placeholder={i18n?.t('invoice_payment_component.plh_enter_amount') ?? 'Enter amount'}
-            formatError={(e) =>
-              (i18n?.t(e) ?? 'Amount should be greater than 0.00 and less than the %s').replace(
-                '%s',
-                _maxAmount
-              )
-            }
-            textAlignVertical="center"
-            options={currencyOption}
-            maxLength={15}
-          />
-          <Text style={styles.labelTextStyle}>
-            {i18n?.t('invoice_payment_component.lbl_transaction_date') ?? 'Transaction date'}
-          </Text>
-          <TouchableOpacity activeOpacity={1} onPress={toggleDatePicker}>
+          <TouchableOpacity activeOpacity={1} onPress={togglePaymentType}>
             <InputField
-              name="transactionDate"
-              activeBorderColor={activeBorderColor ?? '#FOF3F8'}
-              formatError={(e) => i18n?.t(e)}
-              textAlignVertical="center"
+              name={'paymentType'}
+              activeBorderColor={_activeBorderColor}
               editable={false}
               pointerEvents="none"
+              textAlignVertical="center"
               suffixIcon={
                 <View style={styles.suffixIconStyle}>
-                  {calendarIcon ?? <CalendarIcon color={colors.primaryColor} />}
+                  {arrowDownIcon ?? <ArrowDownIcon size={15} color={colors.primaryColor} />}
                 </View>
               }
             />
           </TouchableOpacity>
-          <Text style={styles.labelTextStyle}>
-            {i18n?.t('invoice_payment_component.lbl_reference_optional') ?? 'Reference (Optional)'}
-          </Text>
-          <InputField
-            name="reference"
-            activeBorderColor={activeBorderColor ?? '#FOF3F8'}
-            placeholder={
-              i18n?.t('invoice_payment_component.plh_enter_reference') ?? 'Enter reference'
-            }
-            formatError={(e) => i18n?.t(e)}
-            textAlignVertical="center"
+          <View
+            onLayout={(event) => {
+              if (paymentTypePosY === 0) {
+                const layout = event.nativeEvent.layout;
+                setPaymentTypePosY(layout?.y + layout.height);
+              }
+            }}
           />
-        </View>
+          {isShowPaymentType && (
+            <View style={[styles.paymentTypeContainerStyle, { top: paymentTypePosY }]}>
+              <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+                {_paymentTypes.map((item) => (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    key={item.value}
+                    style={styles.paymentTypeItemContainerStyle}
+                    onPress={() => {
+                      formProps.setFieldValue('paymentType', item.value);
+                      togglePaymentType();
+                    }}
+                  >
+                    <Text style={styles.paymentTypeItemTextStyle}>{item.value}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )}
+          <View
+            onTouchStart={() => {
+              setShowPaymentType(false);
+            }}
+          >
+            <Text style={styles.labelTextStyle}>
+              {i18n?.t('invoice_payment_component.lbl_amount') ?? 'Amount'}
+            </Text>
+            <InputField
+              type={'money'}
+              name={'amount'}
+              keyboardType="decimal-pad"
+              returnKeyType="done"
+              activeBorderColor={_activeBorderColor}
+              placeholder={i18n?.t('invoice_payment_component.plh_enter_amount') ?? 'Enter amount'}
+              formatError={(e) => i18n?.t(e)?.replace('%s', _maxAmount) ?? 'Invalid amount'}
+              textAlignVertical="center"
+              options={currencyOption}
+              maxLength={15}
+            />
+            <Text style={styles.labelTextStyle}>
+              {i18n?.t('invoice_payment_component.lbl_transaction_date') ?? 'Transaction date'}
+            </Text>
+            <TouchableOpacity activeOpacity={1} onPress={toggleDatePicker}>
+              <InputField
+                name="transactionDate"
+                activeBorderColor={_activeBorderColor}
+                formatError={(e) => i18n?.t(e)}
+                textAlignVertical="center"
+                editable={false}
+                pointerEvents="none"
+                suffixIcon={
+                  <View style={styles.suffixIconStyle}>
+                    {calendarIcon ?? <CalendarIcon color={colors.primaryColor} />}
+                  </View>
+                }
+              />
+            </TouchableOpacity>
+            <Text style={styles.labelTextStyle}>
+              {i18n?.t('invoice_payment_component.lbl_reference_optional') ??
+                'Reference (Optional)'}
+            </Text>
+            <InputField
+              name="reference"
+              activeBorderColor={_activeBorderColor}
+              placeholder={
+                i18n?.t('invoice_payment_component.plh_enter_reference') ?? 'Enter reference'
+              }
+              formatError={(e) => i18n?.t(e)}
+              textAlignVertical="center"
+            />
+          </View>
+          <View
+            style={{ height: 400 }}
+            onTouchStart={() => {
+              setShowPaymentType(false);
+            }}
+          />
+        </KeyboardAwareScrollView>
         <View
-          style={{ height: 400 }}
+          style={styles.footerContainerStyle}
           onTouchStart={() => {
             setShowPaymentType(false);
           }}
-        />
+        >
+          <Button
+            onPress={onClose}
+            label={i18n?.t('invoice_payment_component.btn_cancel') ?? 'Cancel'}
+            variant="secondary"
+            style={
+              style?.cancelButtonStyle ?? {
+                secondaryContainerStyle: {
+                  flex: 1,
+                  marginRight: 7.5,
+                },
+              }
+            }
+          />
+          <Button
+            isLoading={isAddingPayment || isUpdatingPayment}
+            disabled={!formProps.isValid}
+            onPress={() => {
+              formProps.submitForm();
+            }}
+            label={i18n?.t('invoice_payment_component.btn_save') ?? 'Save'}
+            style={
+              style?.saveButtonStyle ?? {
+                primaryContainerStyle: {
+                  flex: 1,
+                  marginLeft: 7.5,
+                },
+              }
+            }
+          />
+        </View>
       </>
     );
   };
@@ -251,68 +296,26 @@ const AddPaymentComponent = (props: AddPaymentComponentProps) => {
           onPress={onClose}
           style={styles.closeButtonContainerStyle}
         >
-          <CloseIcon size={15} />
+          {closeIcon ?? <CloseIcon size={15} />}
         </TouchableOpacity>
       </View>
-      <KeyboardAwareScrollView
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-        enableResetScrollToCoords={false}
-        keyboardOpeningTime={Number.MAX_SAFE_INTEGER}
-        style={styles.contentContainerStyle}
-        enableOnAndroid
-        scrollEnabled={!isShowPaymentType}
+
+      <Formik
+        innerRef={formikRef}
+        initialValues={AddPaymentData.default(
+          paymentData ? paymentData.provider : _paymentTypes[0].value,
+          paymentData ? paymentData.amount.toFixed(2) : _maxAmount,
+          paymentData?.reference,
+          paymentData
+            ? moment(paymentData.transactionDate).format(_dateFormat)
+            : moment().format(_dateFormat)
+        )}
+        validationSchema={() => AddPaymentSchema(_maxAmount + 0.01, currencyOption)}
+        onSubmit={handleSubmit}
       >
-        <Formik
-          innerRef={formikRef}
-          initialValues={AddPaymentData.default(
-            paymentData ? paymentData.provider : _paymentTypes[0].value,
-            paymentData ? paymentData.amount.toFixed(2) : _maxAmount,
-            paymentData?.reference,
-            paymentData
-              ? moment(paymentData.transactionDate).format(_dateFormat)
-              : moment().format(_dateFormat)
-          )}
-          validationSchema={() => AddPaymentSchema(_maxAmount + 0.01, currencyOption)}
-          onSubmit={handleSubmit}
-        >
-          {renderForm}
-        </Formik>
-      </KeyboardAwareScrollView>
-      <View
-        style={styles.footerContainerStyle}
-        onTouchStart={() => {
-          setShowPaymentType(false);
-        }}
-      >
-        <Button
-          label={i18n?.t('invoice_payment_component.btn_cancel') ?? 'Cancel'}
-          variant="secondary"
-          style={
-            style?.cancelButtonStyle ?? {
-              secondaryContainerStyle: {
-                flex: 1,
-                marginRight: 7.5,
-              },
-            }
-          }
-        />
-        <Button
-          isLoading={isAddingPayment || isUpdatingPayment}
-          onPress={() => {
-            formikRef?.current?.submitForm();
-          }}
-          label={i18n?.t('invoice_payment_component.btn_save') ?? 'Save'}
-          style={
-            style?.saveButtonStyle ?? {
-              primaryContainerStyle: {
-                flex: 1,
-                marginLeft: 7.5,
-              },
-            }
-          }
-        />
-      </View>
+        {renderForm}
+      </Formik>
+
       <DatePicker
         isVisible={isShowDatePicker}
         onClose={toggleDatePicker}

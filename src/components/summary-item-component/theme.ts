@@ -24,6 +24,10 @@ const useMergeStyles = (style?: SummaryItemComponentStyles): SummaryItemComponen
       fontSize: 15,
       color: colors.primaryTextColor,
     },
+    amountContainerStyle: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     amountStyle: {
       fontFamily: fonts.regular,
       fontSize: 15,
@@ -37,6 +41,14 @@ const useMergeStyles = (style?: SummaryItemComponentStyles): SummaryItemComponen
     arrowRightContainer: {
       position: 'absolute',
       right: 3,
+    },
+    addButtonTitleStyle: {
+      color: colors.primaryColor,
+      fontSize: 14,
+      fontFamily: fonts.medium,
+      zIndex: 99,
+      opacity: 1,
+      paddingLeft: 6,
     },
   });
 

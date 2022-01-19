@@ -40,7 +40,7 @@ const InvoiceActionSheet = (props: InvoiceActionSheetProps) => {
         >
           {editIcon ?? <EditIcon />}
           <Text style={styles.actionTitleStyle}>
-            {i18n?.t('invoice_component.btn_edit_invoice') ?? 'Edit invoice'}
+            {i18n?.t('invoice_list_component.btn_edit_invoice') ?? 'Edit invoice'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -51,7 +51,7 @@ const InvoiceActionSheet = (props: InvoiceActionSheetProps) => {
         >
           {deleteIcon ?? <DeleteIcon />}
           <Text style={styles.actionTitleStyle}>
-            {i18n?.t('invoice_component.btn_delete_invoice') ?? 'Delete invoice'}
+            {i18n?.t('invoice_list_component.btn_delete_invoice') ?? 'Delete invoice'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -68,13 +68,13 @@ const InvoiceActionSheet = (props: InvoiceActionSheetProps) => {
           {shareIcon ?? <ShareIcon />}
           <Text style={styles.actionTitleStyle}>
             {isShareInvoice
-              ? i18n?.t('invoice_component.btn_share_invoice') ?? 'Share invoice'
-              : i18n?.t('invoice_component.btn_send_reminder') ?? 'Send reminder'}
+              ? i18n?.t('invoice_list_component.btn_share_invoice') ?? 'Share invoice'
+              : i18n?.t('invoice_list_component.btn_send_reminder') ?? 'Send reminder'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.8} style={styles.cancelButtonStyle} onPress={onClose}>
           <Text style={styles.cancelTextStyle}>
-            {i18n?.t('invoice_component.btn_cancel')?.toUpperCase() ?? 'CANCEL'}
+            {i18n?.t('invoice_list_component.btn_cancel')?.toUpperCase() ?? 'CANCEL'}
           </Text>
         </TouchableOpacity>
       </View>

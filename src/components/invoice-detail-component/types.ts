@@ -3,18 +3,18 @@ import { ReactNode } from 'react';
 import { ImageURISource, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { DocumentReference, Invoice } from '../../types';
 import { AddPaymentComponentStyles } from '../invoice-payment-component/add-payment-component/types';
-import { ActionButtonComponentStyles } from './action-button-component/types';
+import { ActionButtonComponentStyles } from '../action-button-component/types';
 import { DetailHeaderComponentStyles } from './detail-header-component/types';
 import { DetailShimmerComponentStyles } from './detail-shimmer-component/types';
-import { LineItemComponentStyles } from './line-item-component/types';
 import { QrScanComponentStyles } from './qr-scan-component/types';
-import { SummaryItemComponentStyles } from './summary-item-component/types';
+import { SummaryItemComponentStyles } from '../summary-item-component/types';
+import { LineItemComponentStyles } from './line-item-component/types';
 
 export type InvoiceDetailComponentProps = {
   invoiceId: string;
+  invoice?: Invoice;
   onBackPressed: () => void;
-  onViewDescription: (description: string) => void;
-  onViewAttachments: (documents: DocumentReference[]) => void;
+  onViewAttachments: () => void;
   onViewPayments: (invoice: Invoice) => void;
   qrIcon?: ReactNode;
   dateFormat?: string;

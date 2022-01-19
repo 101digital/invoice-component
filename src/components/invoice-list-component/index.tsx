@@ -28,27 +28,40 @@ const InvoiceListComponent = (_props: InvoiceListComponentProps) => {
     InvoiceItemShimmer,
     ErrorInvoice,
     ActionSheet,
+    onEditInvoice,
   } = _props;
   const styles: InvoiceListComponentStyles = useMergeStyles(style);
   const { i18n, colors, currencies } = useContext(ThemeContext);
-  const { deletedInvoiceSuccess, isLoadingShareLink, getShareLink, shareLink, clearShareLink } =
-    useContext(InvoiceContext);
+  const {
+    deletedInvoiceSuccess,
+    isLoadingShareLink,
+    getShareLink,
+    shareLink,
+    clearShareLink,
+    clearErrors,
+  } = useContext(InvoiceContext);
   const [index, setIndex] = useState(0);
   const _activeTabColor = activeTabColor ?? colors.primaryColor;
   const _inActiveTabColor = inActiveTabColor ?? colors.primaryColor;
   const _routes = [
-    { key: 'first', title: i18n?.t('invoice_component.lbl_all_invoices') ?? 'All invoices' },
-    { key: 'second', title: i18n?.t('invoice_component.lbl_due_invoices') ?? 'Due' },
-    { key: 'third', title: i18n?.t('invoice_component.lbl_overdue_invoices') ?? 'Overdue' },
-    { key: 'fouth', title: i18n?.t('invoice_component.lbl_paid_invoices') ?? 'Paid' },
+    { key: 'first', title: i18n?.t('invoice_list_component.lbl_all_invoices') ?? 'All invoices' },
+    { key: 'second', title: i18n?.t('invoice_list_component.lbl_due_invoices') ?? 'Due' },
+    { key: 'third', title: i18n?.t('invoice_list_component.lbl_overdue_invoices') ?? 'Overdue' },
+    { key: 'fouth', title: i18n?.t('invoice_list_component.lbl_paid_invoices') ?? 'Paid' },
   ];
   const [routes] = useState(_routes);
+
+  useEffect(() => {
+    return () => {
+      clearErrors();
+    };
+  }, []);
 
   useEffect(() => {
     if (deletedInvoiceSuccess) {
       showMessage({
         message: i18n?.t(
-          'invoice_component.msg_invoice_delete_success' ?? 'Invoice deleted successfully'
+          'invoice_list_component.msg_invoice_delete_success' ?? 'Invoice deleted successfully'
         ),
         backgroundColor: '#44ac44',
       });
@@ -90,6 +103,7 @@ const InvoiceListComponent = (_props: InvoiceListComponentProps) => {
           <InvoicePageComponent
             onInvoiceDetail={onInvoiceDetail}
             onCreateInvoice={onCreateInvoice}
+            onEditInvoice={onEditInvoice}
             onShareInvoice={shareInvoice}
             onChaseInvoice={chaseInvoice}
             EmptyInvoice={EmptyInvoice}
@@ -105,6 +119,7 @@ const InvoiceListComponent = (_props: InvoiceListComponentProps) => {
             status={InvoiceStatusType.due}
             onInvoiceDetail={onInvoiceDetail}
             onCreateInvoice={onCreateInvoice}
+            onEditInvoice={onEditInvoice}
             onShareInvoice={shareInvoice}
             onChaseInvoice={chaseInvoice}
             EmptyInvoice={EmptyInvoice}
@@ -120,6 +135,7 @@ const InvoiceListComponent = (_props: InvoiceListComponentProps) => {
             status={InvoiceStatusType.overDue}
             onInvoiceDetail={onInvoiceDetail}
             onCreateInvoice={onCreateInvoice}
+            onEditInvoice={onEditInvoice}
             onShareInvoice={shareInvoice}
             onChaseInvoice={chaseInvoice}
             EmptyInvoice={EmptyInvoice}
@@ -135,6 +151,7 @@ const InvoiceListComponent = (_props: InvoiceListComponentProps) => {
             status={InvoiceStatusType.paid}
             onInvoiceDetail={onInvoiceDetail}
             onCreateInvoice={onCreateInvoice}
+            onEditInvoice={onEditInvoice}
             onShareInvoice={shareInvoice}
             onChaseInvoice={chaseInvoice}
             EmptyInvoice={EmptyInvoice}

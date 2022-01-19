@@ -30,9 +30,11 @@ const InvoicePageComponent = (props: InvoicePageComponentProps) => {
     onShareInvoice,
     ErrorInvoice,
     ActionSheet,
+    onEditInvoice,
   } = props;
-  const { getInvoices, refreshInvoices, getInvoiceDataByStatus, deleteInvoice } =
-    useContext(InvoiceContext);
+  const { getInvoices, refreshInvoices, getInvoiceDataByStatus, deleteInvoice } = useContext(
+    InvoiceContext
+  );
   let _invoiceData = getInvoiceDataByStatus(status);
   const styles: InvoicePageComponentStyles = useMergeStyles(style);
   const { colors, i18n } = useContext(ThemeContext);
@@ -119,7 +121,7 @@ const InvoicePageComponent = (props: InvoicePageComponentProps) => {
           keyExtractor={(item) => item.invoiceId.toString()}
           sections={_invoiceData.groupedData}
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
+          keyboardShouldPersistTaps='handled'
           initialNumToRender={20}
           renderItem={({ item }) => (
             <ItemInvoiceComponent
@@ -180,6 +182,9 @@ const InvoicePageComponent = (props: InvoicePageComponentProps) => {
           setSelectedInvoice(undefined);
         }}
         onEditInvoice={() => {
+          if (selectedInvoice) {
+            onEditInvoice(selectedInvoice.invoiceId);
+          }
           setSelectedInvoice(undefined);
         }}
         onDeleteInvoice={toggleConfirmDelete}
@@ -197,13 +202,13 @@ const InvoicePageComponent = (props: InvoicePageComponentProps) => {
       />
       <AlertModal
         isVisible={isConfirmDelete}
-        title={i18n?.t('invoice_component.lbl_delete_invoice') ?? 'Delete invoice'}
-        cancelTitle={i18n?.t('invoice_component.btn_cancel') ?? 'Cancel'}
-        confirmTitle={i18n?.t('invoice_component.btn_delete') ?? 'Delete'}
+        title={i18n?.t('invoice_list_component.lbl_delete_invoice') ?? 'Delete invoice'}
+        cancelTitle={i18n?.t('invoice_list_component.btn_cancel') ?? 'Cancel'}
+        confirmTitle={i18n?.t('invoice_list_component.btn_delete') ?? 'Delete'}
         onClose={toggleConfirmDelete}
         onCancel={toggleConfirmDelete}
         message={
-          i18n?.t('invoice_component.msg_confirm_delete_invoice') ??
+          i18n?.t('invoice_list_component.msg_confirm_delete_invoice') ??
           'Are you sure? once deleted, you cannot undo this action.'
         }
         isShowClose={false}

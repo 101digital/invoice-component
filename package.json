@@ -1,6 +1,6 @@
 {
   "name": "invoice-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A re-use component to manage the invoices",
   "private": true,
   "repository": {
@@ -30,9 +30,9 @@
     "@types/react-native": "^0.65.0",
     "react": "^17.0.2",
     "react-native": "^0.65.1",
-    "react-native-contacts": "^7.0.3",
-    "react-native-device-info": "^8.4.8",
+    "react-native-image-crop-picker": "^0.37.2",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-mime-types": "^2.3.0",
     "react-native-pager-view": "^5.4.9",
     "react-native-permissions": "^3.2.0",
     "react-native-share": "^7.3.2",

@@ -9,6 +9,11 @@ import {
   InvoiceSubStatusType,
   PaymentReference,
   PaymentItem,
+  DocumentData,
+  ItemInvoiceReference,
+  Extension,
+  BankAccountReference,
+  DocumentReference,
 } from './../types';
 import { InvoiceService } from './../service/invoice-service';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -44,11 +49,27 @@ export interface InvoiceContextData {
   shareLink?: ShareLink;
   clearShareLink: () => void;
   getInvoiceDetail: (invoiceId: string) => void;
+  setInvoiceDetail: (invoice: Invoice) => void;
   isLoadingInvoiceDetail: boolean;
   errorLoadInvoiceDetail?: Error;
   invoiceDetail?: Invoice;
   clearInvoiceDetail: () => void;
-  updateInvoice: (invoice: Invoice) => void;
+  updateInvoice: (
+    invoiceId: string,
+    invoiceDate: string,
+    dueDate: string,
+    currency: string,
+    items: ItemInvoiceReference[],
+    documents: DocumentReference[],
+    description: string,
+    extensions: Extension[],
+    invoiceReference?: string,
+    customer?: {
+      id: string;
+    },
+    status?: InvoiceStatusType,
+    bankAccount?: BankAccountReference
+  ) => Promise<Invoice | undefined>;
   updateInvoiceSubStatus: (invoice: Invoice) => void;
   isUpdatingInvoice: boolean;
   isUpdatedInvoiceSuccess: boolean;
@@ -72,6 +93,30 @@ export interface InvoiceContextData {
   isDeletingPayment: boolean;
   isDeletedPaymentSuccess: boolean;
   errorDeletePayment?: Error;
+  isUploadingDocument: boolean;
+  uploadDocument: (data: DocumentData) => Promise<DocumentReference | undefined>;
+  errorUploadDocument?: Error;
+  getDocumentDetail: (documentId: string) => Promise<DocumentData | undefined>;
+  documents: DocumentReference[];
+  setDocuments: (documents: DocumentReference[]) => void;
+  clearDocuments: () => void;
+  createInvoice: (
+    invoiceDate: string,
+    dueDate: string,
+    currency: string,
+    items: ItemInvoiceReference[],
+    documents: DocumentReference[],
+    description: string,
+    extensions: Extension[],
+    invoiceReference?: string,
+    customer?: {
+      id: string;
+    },
+    bankAccount?: BankAccountReference
+  ) => Promise<Invoice | undefined>;
+  isCreatingInvoice: boolean;
+  isCreatedInvoiceSuccess: boolean;
+  errorCreateInvoice?: Error;
 }
 
 export const invoiceDefaultValue: InvoiceContextData = {
@@ -93,7 +138,7 @@ export const invoiceDefaultValue: InvoiceContextData = {
   getInvoiceDetail: () => null,
   isLoadingInvoiceDetail: false,
   clearInvoiceDetail: () => null,
-  updateInvoice: () => null,
+  updateInvoice: async () => undefined,
   isUpdatedInvoiceSuccess: false,
   isUpdatingInvoice: false,
   updateInvoiceSubStatus: () => null,
@@ -112,6 +157,16 @@ export const invoiceDefaultValue: InvoiceContextData = {
   deletePayment: () => null,
   isDeletingPayment: false,
   isDeletedPaymentSuccess: false,
+  isUploadingDocument: false,
+  uploadDocument: async () => undefined,
+  getDocumentDetail: async () => undefined,
+  documents: [],
+  setDocuments: () => null,
+  clearDocuments: () => null,
+  createInvoice: async () => undefined,
+  isCreatingInvoice: false,
+  isCreatedInvoiceSuccess: false,
+  setInvoiceDetail: () => null,
 };
 
 export const InvoiceContext = React.createContext<InvoiceContextData>(invoiceDefaultValue);
@@ -128,7 +183,7 @@ export function useInvoiceContextValue(): InvoiceContextData {
   const [_isLoadingShareLink, setLoadingShareLink] = useState(false);
   const [_errorLoadShareLink, setErrorLoadShareLink] = useState<Error | undefined>(undefined);
   const [_shareLink, setShareLink] = useState<ShareLink | undefined>(undefined);
-  const [_invoiceDetail, setInvoiceDetail] = useState<Invoice | undefined>(undefined);
+  const [_invoiceDetail, _setInvoiceDetail] = useState<Invoice | undefined>(undefined);
   const [_isLoadingInvoiceDetail, setLoadingInvoiceDetail] = useState(false);
   const [_errorLoadInvoiceDetail, setErrorLoadInvoiceDetail] = useState<Error | undefined>(
     undefined
@@ -154,11 +209,26 @@ export function useInvoiceContextValue(): InvoiceContextData {
   const [_errorDeletePayment, setErrorDeletePayment] = useState<Error | undefined>(undefined);
   const [_deletedPaymentSuccess, setDeletedPaymentSuccess] = useState(false);
 
+  const [_isUploadingDocument, setUploadingDocument] = useState(false);
+  const [_errorUploadDocument, setErrorUploadDocument] = useState<Error | undefined>(undefined);
+
+  const [_documents, _setDocuments] = useState<DocumentReference[]>([]);
+
+  const [_isCreatingInvoice, setCreatingInvoice] = useState(false);
+  const [_errorCreateInvoice, setErrorCreateInvoice] = useState<Error | undefined>(undefined);
+  const [_isCreatedInvoiceSuccess, setCreatedInvoiceSuccess] = useState(false);
+
   const clearSearchInvoices = useCallback(() => {
     setSearchInvoices({ ...initInvoiceData, status: InvoiceStatusType.search });
   }, []);
 
   const clearErrors = useCallback(async () => {
+    if (_errorCreateInvoice) {
+      setErrorCreateInvoice(undefined);
+    }
+    if (_errorUploadDocument) {
+      setErrorUploadDocument(undefined);
+    }
     if (_errorDeletePayment) {
       setErrorDeletePayment(undefined);
     }
@@ -227,6 +297,8 @@ export function useInvoiceContextValue(): InvoiceContextData {
     _errorLoadPayments,
     _errorUpdatePayment,
     _errorDeletePayment,
+    _errorUploadDocument,
+    _errorCreateInvoice,
   ]);
 
   const _setLoadingInvoice = (status?: InvoiceStatusType) => {
@@ -513,7 +585,7 @@ export function useInvoiceContextValue(): InvoiceContextData {
     try {
       setLoadingInvoiceDetail(true);
       const { data } = await invoiceService.getInvoiceDetail(invoiceId);
-      setInvoiceDetail(data);
+      _setInvoiceDetail(data);
       setLoadingInvoiceDetail(false);
     } catch (error) {
       setLoadingInvoiceDetail(false);
@@ -522,10 +594,67 @@ export function useInvoiceContextValue(): InvoiceContextData {
   }, []);
 
   const clearInvoiceDetail = useCallback(async () => {
-    setInvoiceDetail(undefined);
+    _setInvoiceDetail(undefined);
   }, []);
 
-  const updateInvoice = useCallback(async (invoice: Invoice) => {}, []);
+  const setInvoiceDetail = useCallback((invoice: Invoice) => {
+    _setInvoiceDetail(invoice);
+  }, []);
+
+  const updateInvoice = useCallback(
+    async (
+      invoiceId: string,
+      invoiceDate: string,
+      dueDate: string,
+      currency: string,
+      items: ItemInvoiceReference[],
+      documents: DocumentReference[],
+      description: string,
+      extensions: Extension[],
+      invoiceReference?: string,
+      customer?: {
+        id: string;
+      },
+      status?: InvoiceStatusType,
+      bankAccount?: BankAccountReference
+    ) => {
+      try {
+        setUpdatingInvoice(true);
+        await invoiceService.updateInvoice(
+          invoiceId,
+          invoiceDate,
+          dueDate,
+          currency,
+          items,
+          documents,
+          description,
+          extensions,
+          invoiceReference,
+          customer,
+          undefined,
+          bankAccount
+        );
+        const { data } = await invoiceService.getInvoiceDetail(invoiceId);
+        const updatedStatus = data.status[0].key;
+        _refreshInvoice(InvoiceStatusType.all);
+        _refreshInvoice(status);
+        if (updatedStatus !== status) {
+          _refreshInvoice(updatedStatus);
+        }
+        setUpdatedInvoiceSuccess(true);
+        setTimeout(() => {
+          setUpdatedInvoiceSuccess(false);
+        }, 100);
+        setUpdatingInvoice(false);
+        return data;
+      } catch (error) {
+        setUpdatingInvoice(false);
+        setErrorUpdateInvoice(error as Error);
+      }
+      return undefined;
+    },
+    []
+  );
 
   const updateInvoiceSubStatus = useCallback(
     async (invoice: Invoice) => {
@@ -567,7 +696,7 @@ export function useInvoiceContextValue(): InvoiceContextData {
         setUpdatedSubStatusSuccess(true);
         _refreshInvoice(status);
         if (_invoiceDetail) {
-          setInvoiceDetail({
+          _setInvoiceDetail({
             ..._invoiceDetail,
             subStatus,
           });
@@ -648,6 +777,94 @@ export function useInvoiceContextValue(): InvoiceContextData {
     }
   }, []);
 
+  const uploadDocument = useCallback(async (data: DocumentData) => {
+    try {
+      setUploadingDocument(true);
+      const resp = await invoiceService.uploadDocument(
+        data.content,
+        data.contentType,
+        data.type,
+        data.name
+      );
+      setUploadingDocument(false);
+      return {
+        documentId: resp.data.id,
+        documentName: data.name,
+      };
+    } catch (error) {
+      setUploadingDocument(false);
+      setErrorUploadDocument(error as Error);
+    }
+    return undefined;
+  }, []);
+
+  const getDocumentDetail = useCallback(async (documentId: string) => {
+    try {
+      const { data } = await invoiceService.documentDetail(documentId);
+      return data;
+    } catch (error) {
+      if (__DEV__) {
+        console.log('Fetch document detail failed');
+      }
+    }
+    return undefined;
+  }, []);
+
+  const setDocuments = useCallback((documents: DocumentReference[]) => {
+    _setDocuments(documents);
+  }, []);
+
+  const clearDocuments = useCallback(() => {
+    _setDocuments([]);
+  }, []);
+
+  const createInvoice = useCallback(
+    async (
+      invoiceDate: string,
+      dueDate: string,
+      currency: string,
+      items: ItemInvoiceReference[],
+      documents: DocumentReference[],
+      description: string,
+      extensions: Extension[],
+      invoiceReference?: string,
+      customer?: {
+        id: string;
+      },
+      bankAccount?: BankAccountReference
+    ) => {
+      try {
+        setCreatingInvoice(true);
+        const { data } = await invoiceService.createInvoice(
+          invoiceDate,
+          dueDate,
+          currency,
+          items,
+          documents,
+          description,
+          extensions,
+          invoiceReference,
+          customer,
+          bankAccount
+        );
+        const invoice: Invoice = data[0];
+        _refreshInvoice(InvoiceStatusType.all);
+        _refreshInvoice(invoice.status[0].key);
+        setCreatingInvoice(false);
+        setCreatedInvoiceSuccess(true);
+        setTimeout(() => {
+          setCreatedInvoiceSuccess(false);
+        }, 100);
+        return invoice;
+      } catch (error) {
+        setCreatingInvoice(false);
+        setErrorCreateInvoice(error as Error);
+      }
+      return undefined;
+    },
+    []
+  );
+
   return useMemo(
     () => ({
       allInvoices: _allInvoices,
@@ -697,8 +914,26 @@ export function useInvoiceContextValue(): InvoiceContextData {
       isDeletingPayment: _isDeletingPayment,
       isDeletedPaymentSuccess: _deletedPaymentSuccess,
       errorDeletePayment: _errorDeletePayment,
+      uploadDocument,
+      isUploadingDocument: _isUploadingDocument,
+      errorUploadDocument: _errorUploadDocument,
+      getDocumentDetail,
+      documents: _documents,
+      setDocuments,
+      clearDocuments,
+      createInvoice,
+      isCreatingInvoice: _isCreatingInvoice,
+      isCreatedInvoiceSuccess: _isCreatedInvoiceSuccess,
+      errorCreateInvoice: _errorCreateInvoice,
+      setInvoiceDetail,
     }),
     [
+      _isCreatingInvoice,
+      _isCreatedInvoiceSuccess,
+      _errorCreateInvoice,
+      _documents,
+      _errorUploadDocument,
+      _isUploadingDocument,
       _isDeletingPayment,
       _deletedPaymentSuccess,
       _errorDeletePayment,

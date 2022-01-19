@@ -20,6 +20,8 @@ const ItemInvoiceComponent = (props: InvoiceItemComponentProps) => {
     onMoreAction,
     onPressed,
     dateFormat,
+    moreIcon,
+    attachmentIcon,
   } = props;
   const styles: InvoiceItemComponentStyles = useMergeStyles(style);
   const _dateFormat = dateFormat ?? 'DD MMM YYYY';
@@ -105,7 +107,7 @@ const ItemInvoiceComponent = (props: InvoiceItemComponentProps) => {
       <View style={styles.leftContainerStyle}>
         <View style={styles.invoiceNumberContainerStyle}>
           <Text style={styles.invoiceNumberStyle}>{`#${invoice.invoiceNumber}`}</Text>
-          {isShowDocument && <AttachmentIcon size={12} />}
+          {isShowDocument && (attachmentIcon ?? <AttachmentIcon size={12} />)}
         </View>
         {description && (
           <Text numberOfLines={2} style={styles.invoiceDescriptionStyle}>
@@ -128,7 +130,7 @@ const ItemInvoiceComponent = (props: InvoiceItemComponentProps) => {
             }}
             style={styles.moreContainerStyle}
           >
-            <MoreIcon color="#000" />
+            {moreIcon ?? <MoreIcon color="#000" />}
           </TouchableOpacity>
         </View>
         <View style={styles.statusContainerStyle}>

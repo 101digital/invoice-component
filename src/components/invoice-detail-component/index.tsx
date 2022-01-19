@@ -12,16 +12,18 @@ import moment from 'moment';
 import { getCustomerName, showChaseInvoice, showShareInvoice } from '../../utils/helper';
 import { compact, isEmpty } from 'lodash';
 import { InvoiceStatusType } from '../../types';
-import LineItemComponent from './line-item-component';
-import SummaryItemComponent from './summary-item-component';
-import ActionButtonComponent from './action-button-component';
+import SummaryItemComponent from '../summary-item-component';
+import ActionButtonComponent from '../action-button-component';
 import QRScanComponent from './qr-scan-component';
 import AddPaymentComponent from '../invoice-payment-component/add-payment-component';
+import LineItemComponent from './line-item-component';
+import InvoiceDescriptionComponent from './invoice-description-component';
 
 const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
   const {
     onBackPressed,
     invoiceId,
+    invoice,
     style,
     qrIcon,
     dateFormat,
@@ -29,7 +31,6 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
     overdueColor,
     paidColor,
     onViewAttachments,
-    onViewDescription,
     onViewPayments,
     AddPaymentModal,
     DetailHeader,
@@ -54,6 +55,9 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
     isAddedPaymentSuccess,
     isUpdatedPaymentSuccess,
     isDeletedPaymentSuccess,
+    clearDocuments,
+    setDocuments,
+    setInvoiceDetail,
   } = useContext(InvoiceContext);
   const { i18n, colors, currencies } = useContext(ThemeContext);
   const styles: InvoiceDetailComponentStyles = useMergeStyles(style);
@@ -64,9 +68,20 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
   const _overdueColor = overdueColor ?? '#DB0011';
   const [isShowQrModal, setShowQrModal] = useState(false);
   const [isShowPayment, setShowPayment] = useState(false);
+  const [isShowDescription, setShowDescription] = useState(false);
 
   const toggleShowPayment = () => setShowPayment(!isShowPayment);
   const toggleQrModal = () => setShowQrModal(!isShowQrModal);
+  const toggleShowDescription = () => setShowDescription(!isShowDescription);
+
+  useEffect(() => {
+    if (invoiceDetail) {
+      setDocuments(invoiceDetail.documents);
+    }
+    return () => {
+      clearDocuments();
+    };
+  }, [invoiceDetail]);
 
   useEffect(() => {
     if (isAddedPaymentSuccess) {
@@ -121,11 +136,15 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
   }, [shareLink]);
 
   useEffect(() => {
-    getInvoiceDetail(invoiceId);
+    if (invoice) {
+      setInvoiceDetail(invoice);
+    } else {
+      getInvoiceDetail(invoiceId);
+    }
     return () => {
       clearInvoiceDetail();
     };
-  }, [invoiceId]);
+  }, [invoiceId, invoice]);
 
   useEffect(() => {
     if (errorLoadInvoiceDetail) {
@@ -178,7 +197,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
             {...DetailHeader?.props}
           />
           <AnimatedScrollView
-            style={styles.contentContainerStyle}
+            contentContainerStyle={styles.contentContainerStyle}
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.headerContainerStyle}>
@@ -194,7 +213,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               <View style={styles.headerContentContainerStyle}>
                 <View style={styles.rowItemContainerStyle}>
                   <Text style={styles.headerItemTitleStyle}>
-                    {i18n?.t('invoice_component.lbl_invoice_date') ?? 'Invoice date'}
+                    {i18n?.t('invoice_detail_component.lbl_invoice_date') ?? 'Invoice date'}
                   </Text>
                   <Text style={styles.headerItemValueStyle}>
                     {moment(invoiceDetail.invoiceDate).format(_dateFormat)}
@@ -202,7 +221,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
                 </View>
                 <View style={styles.rowItemContainerStyle}>
                   <Text style={styles.headerItemTitleStyle}>
-                    {i18n?.t('invoice_component.lbl_invoice_due_date') ?? 'Due date'}
+                    {i18n?.t('invoice_detail_component.lbl_invoice_due_date') ?? 'Due date'}
                   </Text>
                   <Text style={styles.headerItemValueStyle}>
                     {moment(invoiceDetail.dueDate).format(_dateFormat)}
@@ -211,7 +230,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
                 {!isEmpty(customerName) && (
                   <View style={styles.rowItemContainerStyle}>
                     <Text style={styles.headerItemTitleStyle}>
-                      {i18n?.t('invoice_component.lbl_customer') ?? 'Customer'}
+                      {i18n?.t('invoice_detail_component.lbl_customer') ?? 'Customer'}
                     </Text>
                     <Text style={styles.headerItemValueStyle}>{customerName}</Text>
                   </View>
@@ -219,7 +238,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
                 {!isEmpty(invoiceDetail.invoiceReference) && (
                   <View style={styles.rowItemContainerStyle}>
                     <Text style={styles.headerItemTitleStyle}>
-                      {i18n?.t('invoice_component.lbl_reference') ?? 'Reference'}
+                      {i18n?.t('invoice_detail_component.lbl_reference') ?? 'Reference'}
                     </Text>
                     <Text style={styles.headerItemValueStyle}>
                       {invoiceDetail.invoiceReference}
@@ -228,7 +247,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
                 )}
                 <View style={styles.rowItemContainerStyle}>
                   <Text style={styles.headerItemTitleStyle}>
-                    {i18n?.t('invoice_component.lbl_status') ?? 'Status'}
+                    {i18n?.t('invoice_detail_component.lbl_status') ?? 'Status'}
                   </Text>
                   <Text
                     style={[
@@ -242,7 +261,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               </View>
             </View>
             <Text style={styles.itemsLabelStyle}>
-              {i18n?.t('invoice_component.lbl_items') ?? 'Item(s)'}
+              {i18n?.t('invoice_detail_component.lbl_items') ?? 'Item(s)'}
             </Text>
             <>
               {invoiceItems.map((item) => (
@@ -256,8 +275,8 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               ))}
             </>
             <SummaryItemComponent
-              variant="primary"
-              title={i18n?.t('invoice_component.lbl_sub_total') ?? 'Sub total'}
+              variant='primary'
+              title={i18n?.t('invoice_detail_component.lbl_sub_total') ?? 'Sub total'}
               amount={formatCurrency(
                 currencies,
                 invoiceDetail.invoiceSubTotal,
@@ -267,8 +286,8 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               {...SummaryItem?.props}
             />
             <SummaryItemComponent
-              variant="secondary"
-              title={i18n?.t('invoice_component.lbl_discount') ?? 'Discount'}
+              variant='secondary'
+              title={i18n?.t('invoice_detail_component.lbl_discount') ?? 'Discount'}
               amount={`${invoiceDetail.totalDiscount !== 0 ? '-' : ''} ${formatCurrency(
                 currencies,
                 invoiceDetail.totalDiscount,
@@ -286,8 +305,8 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               {...SummaryItem?.props}
             />
             <SummaryItemComponent
-              variant="secondary"
-              title={i18n?.t('invoice_component.lbl_tax') ?? 'Tax'}
+              variant='secondary'
+              title={i18n?.t('invoice_detail_component.lbl_tax') ?? 'Tax'}
               amount={`${invoiceDetail.totalTax !== 0 ? '+' : ''} ${formatCurrency(
                 currencies,
                 invoiceDetail.totalTax,
@@ -304,23 +323,23 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               {...SummaryItem?.props}
             />
             <SummaryItemComponent
-              variant="primary"
-              title={i18n?.t('invoice_component.lbl_total') ?? 'Total'}
+              variant='primary'
+              title={i18n?.t('invoice_detail_component.lbl_total') ?? 'Total'}
               amount={formatCurrency(currencies, invoiceDetail.totalAmount, invoiceDetail.currency)}
               style={SummaryItem?.style}
               {...SummaryItem?.props}
             />
             <SummaryItemComponent
-              variant="secondary"
-              title={i18n?.t('invoice_component.lbl_payment_paid') ?? 'Paid'}
+              variant='secondary'
+              title={i18n?.t('invoice_detail_component.lbl_payment_paid') ?? 'Paid'}
               amount={formatCurrency(currencies, invoiceDetail.totalPaid, invoiceDetail.currency)}
               onPressedAmount={() => onViewPayments(invoiceDetail)}
               style={SummaryItem?.style}
               {...SummaryItem?.props}
             />
             <SummaryItemComponent
-              variant="primary"
-              title={i18n?.t('invoice_component.lbl_balance_due') ?? 'Balance due'}
+              variant='primary'
+              title={i18n?.t('invoice_detail_component.lbl_balance_due') ?? 'Balance due'}
               amount={formatCurrency(
                 currencies,
                 invoiceDetail.balanceAmount,
@@ -329,25 +348,22 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               style={SummaryItem?.style}
               {...SummaryItem?.props}
             />
-            <View style={{ height: 10 }} />
+            <View style={{ height: 10, zIndex: -1 }} />
             <>
               {!isEmpty(invoiceDetail.description) && (
                 <ActionButtonComponent
                   title={
-                    i18n?.t('invoice_component.btn_invoice_description') ?? 'Invoice description'
+                    i18n?.t('invoice_detail_component.btn_invoice_description') ??
+                    'Invoice description'
                   }
-                  onPressed={() => {
-                    onViewDescription(invoiceDetail.description);
-                  }}
+                  onPressed={toggleShowDescription}
                   style={ActionButton?.style}
                   {...ActionButton?.props}
                 />
               )}
               <ActionButtonComponent
-                title={i18n?.t('invoice_component.btn_attachments') ?? 'Attachments'}
-                onPressed={() => {
-                  onViewAttachments(invoiceDetail.documents);
-                }}
+                title={i18n?.t('invoice_detail_component.btn_attachments') ?? 'Attachments'}
+                onPressed={onViewAttachments}
                 isLastItem
                 style={ActionButton?.style}
                 {...ActionButton?.props}
@@ -364,7 +380,7 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
                   },
                 }
               }
-              label={i18n?.t('invoice_component.btn_add_payment') ?? 'Add payment'}
+              label={i18n?.t('invoice_detail_component.btn_add_payment') ?? 'Add payment'}
               disabled={!canPayMore}
               onPress={toggleShowPayment}
             />
@@ -379,8 +395,8 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
               }
               label={
                 showShareButton
-                  ? i18n?.t('invoice_component.lbl_share_invoice') ?? 'Share invoice'
-                  : i18n?.t('invoice_component.btn_send_reminder') ?? 'Send reminder'
+                  ? i18n?.t('invoice_detail_component.btn_share_invoice') ?? 'Share invoice'
+                  : i18n?.t('invoice_detail_component.btn_send_reminder') ?? 'Send reminder'
               }
               onPress={handleShareInvoice}
               isLoading={(isLoadingShareLink && !isShowQrModal) || isUpdatingInvoice}
@@ -400,6 +416,11 @@ const InvoiceDetailComponent = (props: InvoiceDetailComponentProps) => {
         onClose={toggleShowPayment}
         style={AddPaymentModal?.style}
         {...AddPaymentModal?.props}
+      />
+      <InvoiceDescriptionComponent
+        isVisible={isShowDescription}
+        onClose={toggleShowDescription}
+        description={invoiceDetail.description}
       />
     </>
   );

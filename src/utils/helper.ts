@@ -1,7 +1,7 @@
 import { chain, isEmpty } from 'lodash';
 import moment from 'moment';
 import { Dimensions, NativeScrollEvent, Platform } from 'react-native';
-import { Invoice, ShareLink } from '../types';
+import { DiscountType, Extension, Invoice, ItemInvoiceData, ShareLink } from '../types';
 import Share from 'react-native-share';
 
 function rgbToHex(color: string) {
@@ -67,9 +67,9 @@ export const showShareInvoice = async (
   if (shareLink) {
     try {
       const res = await Share.open({
-        title: i18n?.t('invoice_component.lbl_share_invoice') ?? 'Share invoice',
+        title: i18n?.t('invoice_list_component.lbl_share_invoice') ?? 'Share invoice',
         message: (
-          i18n?.t('invoice_component.msg_share_invoice') ??
+          i18n?.t('invoice_list_component.msg_share_invoice') ??
           'Hi,\n\nPlease use the below URL to view and pay for the invoice.\n\n%s'
         ).replace('%s', shareLink.link),
         failOnCancel: false,
@@ -101,17 +101,17 @@ export const showChaseInvoice = async (
   if (shareLink) {
     const customerName = getCustomerName(shareLink.invoice);
     const customerEmail = getCustomerEmail(shareLink.invoice);
-    const subject = (i18n?.t('invoice_component.lbl_chase_subject') ?? 'Invoice %no from %mc')
+    const subject = (i18n?.t('invoice_list_component.lbl_chase_subject') ?? 'Invoice %no from %mc')
       .replace('%no', shareLink.invoice.invoiceNumber)
       .replace('%mc', shareLink.invoice.merchant.name);
     const amount = formatCurrency(shareLink.invoice.totalAmount, shareLink.invoice.currency);
     try {
       const res = await Share.open({
-        title: i18n?.t('invoice_component.lbl_share_invoice') ?? 'Share invoice',
+        title: i18n?.t('invoice_list_component.lbl_share_invoice') ?? 'Share invoice',
         subject: subject,
         email: customerEmail,
         message: (
-          i18n?.t('invoice_component.msg_chase_invoice') ??
+          i18n?.t('invoice_list_component.msg_chase_invoice') ??
           'Hi %cn,\n\nI hope you are well. We have yet to receive payment of %am in respect of our invoice #%no which was due for payment on %dd.\n\nI would be really grateful if you could let me know when we can expect to receive the payment.\n\nView your invoice online: %sl\n\nBest regards\n\n%mc\n'
         )
           .replace('%cn', customerName)
@@ -161,3 +161,34 @@ export function isIphoneX() {
 export function getBottomSpace() {
   return isIphoneX() ? 34 : 0;
 }
+
+export const getTotalAmount = (items: ItemInvoiceData[]) => {
+  let sum = 0;
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index];
+    const total = (item.quantity * item.amount * (100 - parseFloat(item?.discount || '0'))) / 100;
+    sum += total;
+  }
+  return sum;
+};
+
+export const getExtensionPercent = (extension?: Extension) => {
+  return extension?.type === DiscountType.Percentage ? `(${extension.value}%)` : '';
+};
+
+export const getExtensionAmount = (subTotal: number, extension?: Extension) => {
+  if (!extension) {
+    return 0;
+  }
+  return extension.type === DiscountType.Percentage
+    ? (subTotal * extension.value) / 100
+    : extension.value;
+};
+
+export const validBase64Image = (base64Image?: string): boolean => {
+  if (!base64Image) {
+    return false;
+  }
+  const regex = /^data:image\/(?:gif|png|jpeg|bmp|webp)(?:;charset=utf-8)?;base64,(?:[A-Za-z0-9]|[+/])+={0,2}/;
+  return regex.test(base64Image);
+};

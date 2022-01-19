@@ -12,6 +12,7 @@ export type AddPaymentComponentProps = {
   dateFormat?: string;
   calendarIcon?: ReactNode;
   arrowDownIcon?: ReactNode;
+  closeIcon?: ReactNode;
   style?: AddPaymentComponentStyles;
   onClose: () => void;
 };

@@ -12,11 +12,16 @@ import {
 type InvoiceClient = {
   invoiceClient: any;
   invoiceWebUrl: string;
+  documentClient: any;
   webTemplateName?: string;
   downloadTemplateName?: string;
-  maxAmount?: number;
+  maxFilterAmount?: number;
+  maxCreateAmount?: number;
   minAmount?: number;
   paymentTypes?: PaymentType[];
+  defaultDueDate?: number;
+  maxDocumentSize?: number;
+  documentTypes?: string[];
 };
 
 export class InvoiceService {
@@ -26,10 +31,12 @@ export class InvoiceService {
 
   private _invoiceClient?: any;
   private _invoiceWebUrl?: string;
+  private _documentClient?: any;
   private _webTemplateName = InvoiceService.defaultWebTemplateName; // Default value
   private _downloadTemplate = InvoiceService.defaultDownloadTemplate; // Default value
-  private _maxAmount = 10000;
+  private _maxFilterAmount = 10000;
   private _minAmount = 0;
+  private _maxCreateAmount = 1000000000;
   private _paymentTypes = [
     {
       label: 'Cash',
@@ -68,6 +75,9 @@ export class InvoiceService {
       value: 'POS - Voucher',
     },
   ];
+  private _defaultDueDate = 15;
+  private _maxDocumentSize = 2097151;
+  private _documentTypes = ['jpeg', 'jpg', 'png', 'heic'];
 
   constructor() {
     if (InvoiceService._instance) {
@@ -84,10 +94,17 @@ export class InvoiceService {
 
   public initClients = (clients: InvoiceClient) => {
     this._invoiceClient = clients.invoiceClient;
+    this._documentClient = clients.documentClient;
     this._invoiceWebUrl = clients.invoiceWebUrl;
     this._webTemplateName = clients.webTemplateName ?? this._webTemplateName;
     this._downloadTemplate = clients.downloadTemplateName ?? this._downloadTemplate;
     this._paymentTypes = clients.paymentTypes ?? this._paymentTypes;
+    this._defaultDueDate = clients.defaultDueDate ?? this._defaultDueDate;
+    this._maxCreateAmount = clients.maxCreateAmount ?? this._maxCreateAmount;
+    this._maxFilterAmount = clients.maxFilterAmount ?? this._maxFilterAmount;
+    this._minAmount = clients.minAmount ?? this._minAmount;
+    this._maxDocumentSize = clients.maxDocumentSize ?? this._maxDocumentSize;
+    this._documentTypes = clients.documentTypes ?? this._documentTypes;
   };
 
   public setTemplates = (webTemplateName?: string, downloadTemplate?: string) => {
@@ -95,21 +112,47 @@ export class InvoiceService {
     this._downloadTemplate = downloadTemplate ?? this._downloadTemplate;
   };
 
-  public setMaxMinAmount = (maxAmount?: number, minAmount?: number) => {
-    this._maxAmount = maxAmount ?? this._maxAmount;
-    this._minAmount = minAmount ?? this._minAmount;
+  public setMaxCreateAmount = (amount?: number) => {
+    this._maxCreateAmount = amount ?? this._maxCreateAmount;
+  };
+
+  public setMaxFilterAmount = (amount?: number) => {
+    this._maxFilterAmount = amount ?? this._maxFilterAmount;
+  };
+
+  public setMinAmount = (amount?: number) => {
+    this._minAmount = amount ?? this._minAmount;
   };
 
   public getMaxMinAmount = () => ({
-    maxAmount: this._maxAmount,
+    maxCreateAmount: this._maxCreateAmount,
     minAmount: this._minAmount,
+    maxFilterAmount: this._maxFilterAmount,
   });
+
+  public setMaxDocumentSize = (size?: number) => {
+    this._maxDocumentSize = size ?? this._maxDocumentSize;
+  };
+
+  public getMaxDocumentSize = () => this._maxDocumentSize;
+
+  public setDocumentTypes = (types?: string[]) => {
+    this._documentTypes = types ?? this._documentTypes;
+  };
+
+  public getDocumentTypes = () => this._documentTypes;
 
   public setPaymentTypes = (paymentTypes?: PaymentType[]) => {
     this._paymentTypes = paymentTypes ?? this._paymentTypes;
   };
 
   public getPaymentTypes = () => this._paymentTypes;
+
+  public setDefaultDueDate = (dueDate?: number) => {
+    this._defaultDueDate = dueDate ?? this._defaultDueDate;
+  };
+
+  public getDefaultDueDate = () => this._defaultDueDate;
 
   getInvoices = async (params?: InvoiceParam) => {
     if (this._invoiceClient) {
@@ -210,6 +253,48 @@ export class InvoiceService {
     }
   };
 
+  createInvoice = async (
+    invoiceDate: string,
+    dueDate: string,
+    currency: string,
+    items: ItemInvoiceReference[],
+    documents: DocumentReference[],
+    description: string,
+    extensions: Extension[],
+    invoiceReference?: string,
+    customer?: {
+      id: string;
+    },
+    bankAccount?: BankAccountReference
+  ) => {
+    if (this._invoiceClient) {
+      const body = {
+        invoices: [
+          {
+            customer,
+            invoiceReference,
+            currency,
+            invoiceDate,
+            dueDate,
+            items,
+            documents,
+            description,
+            extensions,
+            bankAccount,
+          },
+        ],
+      };
+      const response = await this._invoiceClient.post('invoices', body, {
+        headers: {
+          'Operation-Mode': 'SYNC',
+        },
+      });
+      return response.data;
+    } else {
+      throw new Error('Invoice Client is not registered');
+    }
+  };
+
   addPayment = async (params: PaymentReference) => {
     if (this._invoiceClient) {
       const body = {
@@ -289,6 +374,29 @@ export class InvoiceService {
       return response.data;
     } else {
       throw new Error('Invoice Client is not registered');
+    }
+  };
+
+  uploadDocument = async (content: string, contentType: string, type: string, name: string) => {
+    if (this._documentClient) {
+      const response = await this._documentClient.post('documents', {
+        content,
+        type,
+        contentType,
+        name,
+      });
+      return response.data;
+    } else {
+      throw new Error('Document Client is not registered');
+    }
+  };
+
+  documentDetail = async (documentId: string) => {
+    if (this._documentClient) {
+      const response = await this._documentClient.get(`documents/${documentId}`);
+      return response.data;
+    } else {
+      throw new Error('Document Client is not registered');
     }
   };
 }

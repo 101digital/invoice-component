@@ -22,6 +22,7 @@ const InvoiceSearchComponent = (props: InvoiceSearchComponentProps) => {
     InvoiceItem,
     InvoiceItemShimmer,
     ErrorInvoice,
+    onEditInvoice,
   } = props;
   const styles: InvoiceSearchComponentStyles = useMergeStyles(style);
   const {
@@ -34,6 +35,7 @@ const InvoiceSearchComponent = (props: InvoiceSearchComponentProps) => {
     clearShareLink,
     isUpdatedSubStatusSuccess,
     isAddedPaymentSuccess,
+    isUpdatedInvoiceSuccess,
   } = useContext(InvoiceContext);
   const { i18n, currencies } = useContext(ThemeContext);
   const [params, setParams] = useState<InvoiceParam>({ keyword: '' });
@@ -43,7 +45,7 @@ const InvoiceSearchComponent = (props: InvoiceSearchComponentProps) => {
       refreshInvoices({ ...params, status: InvoiceStatusType.search });
       showMessage({
         message: i18n?.t(
-          'invoice_component.msg_invoice_delete_success' ?? 'Invoice deleted successfully'
+          'invoice_list_component.msg_invoice_delete_success' ?? 'Invoice deleted successfully'
         ),
         backgroundColor: '#44ac44',
       });
@@ -51,16 +53,10 @@ const InvoiceSearchComponent = (props: InvoiceSearchComponentProps) => {
   }, [deletedInvoiceSuccess]);
 
   useEffect(() => {
-    if (isAddedPaymentSuccess) {
+    if (isAddedPaymentSuccess || isUpdatedSubStatusSuccess || isUpdatedInvoiceSuccess) {
       refreshInvoices({ ...params, status: InvoiceStatusType.search });
     }
-  }, [isAddedPaymentSuccess]);
-
-  useEffect(() => {
-    if (isUpdatedSubStatusSuccess) {
-      refreshInvoices({ ...params, status: InvoiceStatusType.search });
-    }
-  }, [isUpdatedSubStatusSuccess]);
+  }, [isAddedPaymentSuccess, isUpdatedSubStatusSuccess, isUpdatedInvoiceSuccess]);
 
   useEffect(() => {
     return () => {
@@ -119,6 +115,7 @@ const InvoiceSearchComponent = (props: InvoiceSearchComponentProps) => {
         InvoiceItem={InvoiceItem}
         InvoiceItemShimmer={InvoiceItemShimmer}
         ErrorInvoice={ErrorInvoice}
+        onEditInvoice={onEditInvoice}
       />
     </View>
   );

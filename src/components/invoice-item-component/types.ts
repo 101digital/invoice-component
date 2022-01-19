@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { Invoice } from '../../types';
 
@@ -8,6 +9,8 @@ export type InvoiceItemComponentProps = {
   dueColor?: string;
   overdueColor?: string;
   dateFormat?: string;
+  moreIcon?: ReactNode;
+  attachmentIcon?: ReactNode;
   onPressed: (invoice: Invoice) => void;
   onMoreAction: (invoice: Invoice) => void;
   style?: InvoiceItemComponentStyles;

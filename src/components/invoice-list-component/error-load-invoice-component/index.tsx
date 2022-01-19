@@ -18,7 +18,7 @@ const ErrorLoadInvoiceComponent = (props: ErrorLoadInvoiceComponentProps) => {
     <View style={styles.containerStyle}>
       {errorIcon ?? <DangerIcon size={74} />}
       <Text style={styles.errorTitleStyle}>
-        {i18n?.t('invoice_component.msg_load_invoice_error') ?? 'Error loading invoices'}
+        {i18n?.t('invoice_list_component.msg_load_invoice_error') ?? 'Error loading invoices'}
       </Text>
       {errorId && <Text style={styles.errorMessageStyle}>{`(Error: ${errorId})`}</Text>}
       <TouchableOpacity
@@ -29,7 +29,7 @@ const ErrorLoadInvoiceComponent = (props: ErrorLoadInvoiceComponentProps) => {
         }}
       >
         <Text style={styles.retryTextStyle}>
-          {i18n?.t('invoice_component.btn_retry') ?? 'Try again'}
+          {i18n?.t('invoice_list_component.btn_retry') ?? 'Try again'}
         </Text>
       </TouchableOpacity>
     </View>

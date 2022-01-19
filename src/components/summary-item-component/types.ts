@@ -9,8 +9,10 @@ export type SummaryItemComponentProps = {
   primaryColor?: string;
   secondaryColor?: string;
   arrowRightIcon?: ReactNode;
+  addIcon?: ReactNode;
   onPressedAmount?: () => void;
   style?: SummaryItemComponentStyles;
+  onAddValue?: () => void;
 };
 
 export type SummaryItemComponentStyles = {
@@ -20,4 +22,6 @@ export type SummaryItemComponentStyles = {
   subTitleStyle?: StyleProp<TextStyle>;
   amountStyle?: StyleProp<TextStyle>;
   arrowRightContainer?: StyleProp<ViewStyle>;
+  amountContainerStyle?: StyleProp<ViewStyle>;
+  addButtonTitleStyle?: StyleProp<TextStyle>;
 };

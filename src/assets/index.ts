@@ -19,3 +19,14 @@ export * from './calendar.icon';
 export * from './add-item.icon';
 export * from './edit-item.icon';
 export * from './delete-item.icon';
+export * from './minus.icon';
+export * from './plus-2.icon';
+export * from './camera.icon';
+export * from './photo.icon';
+export * from './close-border.icon';
+export * from './danger2.icon';
+
+export const images = {
+  bank: require('./bank.png'),
+  qrFrame: require('./qr-window.png'),
+};

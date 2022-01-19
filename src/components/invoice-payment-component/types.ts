@@ -24,6 +24,7 @@ export type InvoicePaymentComponentProps = {
       dateFormat?: string;
       calendarIcon?: ReactNode;
       arrowDownIcon?: ReactNode;
+      closeIcon?: ReactNode;
     };
     style?: AddPaymentComponentStyles;
   };

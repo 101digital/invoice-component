@@ -12,7 +12,7 @@ const useMergeStyles = (style?: InvoiceDetailComponentStyles): InvoiceDetailComp
       flex: 1,
     },
     contentContainerStyle: {
-      flex: 1,
+      paddingBottom: 20,
     },
     footerContainerStyle: {
       width: '100%',

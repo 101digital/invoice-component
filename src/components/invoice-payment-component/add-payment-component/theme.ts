@@ -30,8 +30,6 @@ const useMergeStyles = (style?: AddPaymentComponentStyles): AddPaymentComponentS
     headerContainerStyle: {
       flexDirection: 'row',
       alignItems: 'center',
-      borderBottomWidth: 1,
-      borderBottomColor: '#e2e2e2',
     },
     closeButtonContainerStyle: {
       height: 55,
@@ -41,7 +39,7 @@ const useMergeStyles = (style?: AddPaymentComponentStyles): AddPaymentComponentS
     },
     headerTitleStyle: {
       fontFamily: fonts.medium,
-      fontSize: 14,
+      fontSize: 15,
       color: colors.primaryTextColor,
       lineHeight: 17,
       flex: 1,

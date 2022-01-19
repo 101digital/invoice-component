@@ -10,7 +10,7 @@ const PaymentItemComponent = (props: PaymentItemComponentProps) => {
   const { style, payment, dateFormat, editIcon, deleteIcon, onDelete, onEdit, canChange } = props;
   const _dateFormat = dateFormat ?? 'DD MMM YYYY';
   const styles: PaymentItemComponentStyles = useMergeStyles(style);
-  const {} = useContext(ThemeContext);
+  const { i18n } = useContext(ThemeContext);
 
   return (
     <View style={styles.containerStyle}>
@@ -21,9 +21,12 @@ const PaymentItemComponent = (props: PaymentItemComponentProps) => {
         </Text>
       </View>
       <View style={styles.footerContainerStyle}>
-        <Text style={styles.dateStyle}>{`Date: ${moment(payment.transactionDate).format(
-          _dateFormat
-        )}`}</Text>
+        <Text style={styles.dateStyle}>
+          {(i18n?.t('invoice_payment_component.lbl_payment_date') ?? 'Date: %s').replace(
+            '%s',
+            moment(payment.transactionDate).format(_dateFormat)
+          )}
+        </Text>
         {canChange && (
           <>
             <TouchableOpacity
@@ -31,7 +34,7 @@ const PaymentItemComponent = (props: PaymentItemComponentProps) => {
               activeOpacity={0.8}
               style={styles.actionButtonContainerStyle}
             >
-              {editIcon ?? <EditItemIcon color="#000000" />}
+              {editIcon ?? <EditItemIcon color="#000" />}
             </TouchableOpacity>
             <TouchableOpacity
               onPress={onDelete}
