@@ -42,7 +42,7 @@ const InvoiceListComponent = (_props: InvoiceListComponentProps) => {
   } = useContext(InvoiceContext);
   const [index, setIndex] = useState(0);
   const _activeTabColor = activeTabColor ?? colors.primaryColor;
-  const _inActiveTabColor = inActiveTabColor ?? colors.primaryColor;
+  const _inActiveTabColor = inActiveTabColor ?? colors.primaryTextColor;
   const _routes = [
     { key: 'first', title: i18n?.t('invoice_list_component.lbl_all_invoices') ?? 'All invoices' },
     { key: 'second', title: i18n?.t('invoice_list_component.lbl_due_invoices') ?? 'Due' },
