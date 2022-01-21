@@ -25,6 +25,7 @@ export * from './camera.icon';
 export * from './photo.icon';
 export * from './close-border.icon';
 export * from './danger2.icon';
+export * from './money.icon';
 
 export const images = {
   bank: require('./bank.png'),

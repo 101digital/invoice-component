@@ -4,7 +4,7 @@ import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 export type MoneyBoxComponentProps = {
   label: string;
   value: string;
-  rightIcon: ReactNode;
+  rightIcon?: ReactNode;
   style?: MoneyBoxComponentStyles;
 };
 
