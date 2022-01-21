@@ -1,0 +1,359 @@
+{
+  "id": "invoice-component",
+  "name": "Invoice Component",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/101digital/invoice-component.git"
+  },
+  "config": {
+    "env": {
+      "development": {
+        "invoiceBaseUrl": "https://sandbox.101digital.io/invoice-service/2.0.0",
+        "documentBaseUrl": "https://sandbox.101digital.io/document-repository-service/1.0.1-SNAPSHOT",
+        "invoiceWebUrl": "https://sandbox-pay.101digital.io",
+        "webTemplateName": "101Pay-html-template-v1.0",
+        "downloadTemplateName": "101Pay-pdf-template-v1.0",
+        "maxFilterAmount": 10000,
+        "maxCreateAmount": 1000000000,
+        "minAmount": 0,
+        "paymentTypes": [
+          {
+            "label": "Cash",
+            "value": "Cash"
+          },
+          {
+            "label": "Bank Transfer",
+            "value": "Bank Transfer"
+          },
+          {
+            "label": "Cheque",
+            "value": "Cheque"
+          },
+          {
+            "label": "Gift Certificate",
+            "value": "Gift Certificate"
+          },
+          {
+            "label": "POS - Visa",
+            "value": "POS - Visa"
+          },
+          {
+            "label": "POS - Mastercard",
+            "value": "POS - Mastercard"
+          },
+          {
+            "label": "POS - AMEX",
+            "value": "POS - AMEX"
+          },
+          {
+            "label": "POS - Other CC/DC",
+            "value": "POS - Other CC/DC"
+          },
+          {
+            "label": "POS - Voucher",
+            "value": "POS - Voucher"
+          }
+        ],
+        "defaultDueDate": 15,
+        "maxDocumentSize": 2097151,
+        "documentTypes": ["jpeg", "jpg", "png", "heic"]
+      },
+      "staging": {
+        "invoiceBaseUrl": "https://sandbox.101digital.io/invoice-service/2.0.0",
+        "documentBaseUrl": "https://sandbox.101digital.io/document-repository-service/1.0.1-SNAPSHOT",
+        "invoiceWebUrl": "https://sandbox-pay.101digital.io",
+        "webTemplateName": "101Pay-html-template-v1.0",
+        "downloadTemplateName": "101Pay-pdf-template-v1.0",
+        "maxFilterAmount": 10000,
+        "maxCreateAmount": 1000000000,
+        "minAmount": 0,
+        "paymentTypes": [
+          {
+            "label": "Cash",
+            "value": "Cash"
+          },
+          {
+            "label": "Bank Transfer",
+            "value": "Bank Transfer"
+          },
+          {
+            "label": "Cheque",
+            "value": "Cheque"
+          },
+          {
+            "label": "Gift Certificate",
+            "value": "Gift Certificate"
+          },
+          {
+            "label": "POS - Visa",
+            "value": "POS - Visa"
+          },
+          {
+            "label": "POS - Mastercard",
+            "value": "POS - Mastercard"
+          },
+          {
+            "label": "POS - AMEX",
+            "value": "POS - AMEX"
+          },
+          {
+            "label": "POS - Other CC/DC",
+            "value": "POS - Other CC/DC"
+          },
+          {
+            "label": "POS - Voucher",
+            "value": "POS - Voucher"
+          }
+        ],
+        "defaultDueDate": 15,
+        "maxDocumentSize": 2097151,
+        "documentTypes": ["jpeg", "jpg", "png", "heic"]
+      },
+      "production": {
+        "invoiceBaseUrl": "https://api.101digital.io/invoice-service/v2.0",
+        "documentBaseUrl": "https://api.101digital.io/document-repository-service/1.0.1-SNAPSHOT",
+        "invoiceWebUrl": "https://pay.101digital.io",
+        "webTemplateName": "101Pay-html-template-v1.0",
+        "downloadTemplateName": "101Pay-pdf-template-v1.0",
+        "maxFilterAmount": 10000,
+        "maxCreateAmount": 1000000000,
+        "minAmount": 0,
+        "paymentTypes": [
+          {
+            "label": "Cash",
+            "value": "Cash"
+          },
+          {
+            "label": "Bank Transfer",
+            "value": "Bank Transfer"
+          },
+          {
+            "label": "Cheque",
+            "value": "Cheque"
+          },
+          {
+            "label": "Gift Certificate",
+            "value": "Gift Certificate"
+          },
+          {
+            "label": "POS - Visa",
+            "value": "POS - Visa"
+          },
+          {
+            "label": "POS - Mastercard",
+            "value": "POS - Mastercard"
+          },
+          {
+            "label": "POS - AMEX",
+            "value": "POS - AMEX"
+          },
+          {
+            "label": "POS - Other CC/DC",
+            "value": "POS - Other CC/DC"
+          },
+          {
+            "label": "POS - Voucher",
+            "value": "POS - Voucher"
+          }
+        ],
+        "defaultDueDate": 15,
+        "maxDocumentSize": 2097151,
+        "documentTypes": ["jpeg", "jpg", "png", "heic"]
+      }
+    }
+  },
+  "dependencies": {
+    "react-native-theme-component": "https://github.com/101digital/react-native-theme-component.git",
+    "react-native-pager-view": "^5.4.9",
+    "react-native-image-crop-picker": "^0.37.2",
+    "react-native-linear-gradient": "^2.5.6",
+    "react-native-permissions": "^3.2.0",
+    "react-native-share": "^7.3.2",
+    "react-native-svg": "^12.1.1",
+    "react-native-tab-view": "^3.1.1"
+  },
+  "templates": [],
+  "texts": {
+    "invoice_list_component": {
+      "lbl_all_invoices": "All invoices",
+      "lbl_due_invoices": "Due",
+      "lbl_overdue_invoices": "Overdue",
+      "lbl_paid_invoices": "Paid",
+      "lbl_no_invoices": "No invoices",
+      "msg_no_invoices": "Use the Create invoice button to create an invoice",
+      "btn_create_invoice": "Create invoice",
+      "btn_edit_invoice": "Edit invoice",
+      "btn_delete_invoice": "Delete invoice",
+      "btn_share_invoice": "Share invoice",
+      "btn_cancel": "Cancel",
+      "lbl_delete_invoice": "Delete invoice",
+      "msg_confirm_delete_invoice": "Are you sure? once deleted, you cannot undo this action.",
+      "btn_delete": "Delete",
+      "msg_invoice_delete_success": "Invoice deleted successfully",
+      "btn_send_reminder": "Send reminder",
+      "lbl_share_invoice": "Share invoice",
+      "msg_share_invoice": "Hi,\n\nPlease use the below URL to view and pay for the invoice.\n\n%s",
+      "lbl_chase_subject": "Invoice %no from %mc",
+      "msg_chase_invoice": "Hi %cn,\n\nI hope you are well. We have yet to receive payment of %am in respect of our invoice #%no which was due for payment on %dd.\n\nI would be really grateful if you could let me know when we can expect to receive the payment.\n\nView your invoice online: %sl\n\nBest regards\n\n%mc\n",
+      "msg_load_invoice_error": "Error loading invoices",
+      "btn_retry": "Try again"
+    },
+    "invoice_detail_component": {
+      "lbl_status": "Status",
+      "lbl_invoice_date": "Invoice date",
+      "lbl_reference": "Reference",
+      "lbl_invoice_due_date": "Due date",
+      "lbl_customer": "Customer",
+      "lbl_items": "Item(s)",
+      "lbl_sub_total": "Sub total",
+      "lbl_discount": "Discount",
+      "lbl_tax": "Tax",
+      "lbl_total": "Total",
+      "lbl_payment_paid": "Paid",
+      "lbl_balance_due": "Balance due",
+      "btn_add_payment": "Add payment",
+      "lbl_scan_qr_to_pay": "Scan QR to pay",
+      "lbl_invoice_number": "Invoice number",
+      "lbl_total_amount": "Total amount",
+      "btn_invoice_description": "Invoice description",
+      "btn_attachments": "Attachments",
+      "msg_error_loading_qr": "Error while loading QR code",
+      "btn_share_invoice": "Share invoice",
+      "btn_send_reminder": "Send reminder",
+      "lbl_invoice_description": "Invoice description"
+    },
+    "invoice_search_component": {
+      "plh_search": "Search",
+      "lbl_all": "All",
+      "lbl_today": "Today",
+      "lbl_this_week": "This week",
+      "lbl_this_month": "This month",
+      "lbl_this_year": "This year",
+      "lbl_custom_date": "Custom date",
+      "lbl_filter": "Filter",
+      "lbl_status": "Status",
+      "lbl_invoice_date": "Invoice date",
+      "lbl_invoice_amount": "Invoice amount",
+      "btn_apply": "Apply",
+      "lbl_filtered_by": "Filtered by",
+      "lbl_no_results": "No results",
+      "lbl_due_invoices": "Due",
+      "lbl_overdue_invoices": "Overdue",
+      "lbl_paid_invoices": "Paid",
+      "btn_cancel": "Cancel"
+    },
+    "invoice_payment_component": {
+      "lbl_add_payment": "Add payment",
+      "lbl_payment_types": "Payment type",
+      "lbl_amount": "Amount",
+      "lbl_transaction_date": "Transaction date",
+      "lbl_reference_optional": "Reference (Optional)",
+      "btn_cancel": "Cancel",
+      "btn_save": "Save",
+      "plh_enter_amount": "Enter amount",
+      "plh_enter_reference": "Enter reference",
+      "val_amount_required": "Amount is required",
+      "val_valid_amount": "Amount should be greater than 0.00 and less than the %s",
+      "msg_add_payment_successful": "Payment added successfully",
+      "msg_update_payment_successful": "Payment updated successfully",
+      "msg_delete_payment_successful": "Payment deleted successfully",
+      "lbl_delete_payment": "Delete payment",
+      "msg_confirm_delete_payment": "Are you sure? once deleted, you cannot undo this action.",
+      "btn_delete": "Delete",
+      "lbl_edit_payment": "Edit payment",
+      "btn_add_new": "Add new",
+      "lbl_total_paid": "Total amount paid",
+      "lbl_balance_due": "Balance due",
+      "lbl_payment_date": "Date: %s"
+    },
+    "create_invoice_component": {
+      "btn_next": "Next",
+      "btn_back": "Back",
+      "btn_cancel": "Cancel",
+      "lbl_edit_invoice": "Edit invoice",
+      "lbl_create_invoice": "Create invoice",
+      "btn_no": "No",
+      "btn_yes": "Yes",
+      "lbl_step_details": "Details",
+      "lbl_step_add_item": "Add items",
+      "lbl_step_create": "Create",
+      "lbl_confirmation": "Confirmation",
+      "msg_confirm_discard_data": "Are you sure you want to quit? all your changes will be discarded.",
+      "val_item_name_required": "Item name is required",
+      "val_min_item_name": "Item name must be at least 2 characters",
+      "val_max_item_name": "Item name should be less than 25 characters",
+      "val_price_required": "Price is required",
+      "val_min_price": "Price should be greater than",
+      "val_max_price": "Price should be less than the",
+      "val_min_description": "Description is too short",
+      "val_max_description": "Description should be less than 250 characters",
+      "val_discount_invalid": "Discount must be a number",
+      "val_min_invoice_discount": "Invoice discount is invalid",
+      "val_max_invoice_discount": "Discount can’t be greater than 100%.",
+      "val_min_invoice_vat": "Invoice VAT is invalid",
+      "val_vat_invalid": "VAT must be a number",
+      "val_max_invoice_discount_fixed": "Discount can’t be greater than invoice sub total amount.",
+      "val_max_invoice_vat_fixed": "VAT can’t be greater than invoice sub total amount.",
+      "val_max_invoice_vat": "VAT can’t be greater than 100%.",
+      "lbl_customer_optional": "Customer (Optional)",
+      "plh_search_customer": "Search customer",
+      "lbl_invoice_date": "Invoice date",
+      "lbl_due_date": "Due date",
+      "lbl_description": "Description",
+      "plh_enter_description": "Enter description",
+      "lbl_add_item_to_continue": "Add an item to continue",
+      "lbl_items_added": "Items added",
+      "btn_add_item": "Add item",
+      "lbl_sub_total": "Sub total",
+      "lbl_total_amount": "Total amount",
+      "lbl_add_item_modal": "Add item",
+      "btn_add": "Add",
+      "lbl_quantity": "Quantity",
+      "plh_enter_unit_measurement": "Enter the unit of measurement",
+      "lbl_item_uom_optional": "Item UOM (Optional)",
+      "lbl_unit_price": "Unit price (%s)",
+      "plh_enter_price": "Enter price",
+      "lbl_item_name": "Item name",
+      "plh_enter_name": "Enter name",
+      "btn_create_invoice": "Create invoice",
+      "btn_update_invoice": "Update invoice",
+      "lbl_add_discount": "Add discount",
+      "lbl_add_tax": "Add tax",
+      "plh_enter_reference": "Enter reference number",
+      "lbl_add_reference": "Add reference number",
+      "btn_add_reference": "OK",
+      "btn_add_tax": "OK",
+      "btn_add_discount": "OK",
+      "lbl_percentage": "Percentage",
+      "lbl_fixed_value": "Fixed value",
+      "plh_enter_tax": "Enter tax (%)",
+      "plh_enter_discount": "Enter discount (%)",
+      "lbl_customer": "Customer",
+      "lbl_discount": "Discount",
+      "lbl_tax": "Tax",
+      "lbl_total": "Total",
+      "btn_attach_document": "Attachments",
+      "btn_reference_number": "Reference number",
+      "btn_add_extention": "Add",
+      "msg_invoice_created_successful": "Invoice created successfully",
+      "msg_invoice_updated_successful": "Invoice updated successfully"
+    },
+    "invoice_attachment_component": {
+      "msg_attach_failed": "Upload document failed",
+      "msg_allow_file_type": "Allowed file types are PNG and JPG/JPEG",
+      "msg_max_file_size": "Maximum file size should be 2MB",
+      "msg_allow_access_camera": "Allow application to access your camera",
+      "msg_allow_access_photo": "Allow application to access your photos",
+      "msg_turn_camera_setting": "Tap Open Settings and turn on Camera to allow access.",
+      "msg_turn_photo_setting": "Tap Open Settings and turn on Photos to allow access.",
+      "btn_open_setting": "Open Settings",
+      "msg_uploading": "Uploading document...",
+      "btn_take_photo": "Take photo",
+      "btn_choose_photo": "Choose photo",
+      "msg_attach_document_error_title": "Unable to upload attachment",
+      "msg_attach_document_error": "An error occurred while trying to upload the attachment. Please try again.",
+      "btn_cancel": "Cancel",
+      "lbl_document_preview": "Document preview"
+    }
+  }
+}
