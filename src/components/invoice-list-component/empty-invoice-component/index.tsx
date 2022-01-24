@@ -59,7 +59,7 @@ const EmptyInvoicesComponent = (props: EmptyInvoicesProps) => {
               onPress={onCreateInvoice}
               style={styles.createButtonContainerStyle}
             >
-              {plusIcon ?? <PlusIcon size={20} color={colors.primaryColor} />}
+              {plusIcon ?? <PlusIcon size={20} color={'#ffffff'} />}
               <Text style={styles.createButtonTextStyle}>
                 {i18n?.t('invoice_list_component.btn_create_invoice') ?? 'Create invoice'}
               </Text>
