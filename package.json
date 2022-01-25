@@ -1,6 +1,6 @@
 {
   "name": "invoice-component",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A re-use component to manage the invoices",
   "private": true,
   "repository": {

@@ -42,7 +42,7 @@ export interface InvoiceContextData {
   deleteInvoice: (invoiceId: string, status?: InvoiceStatusType) => void;
   isDeletingInvoice: boolean;
   errorDeleteInvoice?: Error;
-  deletedInvoiceSuccess: boolean;
+  isDeletedInvoiceSuccess: boolean;
   getShareLink: (invoice: Invoice, isChase: boolean, showFrom: string) => void;
   isLoadingShareLink: boolean;
   errorLoadShareLink?: Error;
@@ -131,7 +131,7 @@ export const invoiceDefaultValue: InvoiceContextData = {
   getInvoiceDataByStatus: () => initInvoiceData,
   deleteInvoice: () => null,
   isDeletingInvoice: false,
-  deletedInvoiceSuccess: false,
+  isDeletedInvoiceSuccess: false,
   getShareLink: () => null,
   isLoadingShareLink: false,
   clearShareLink: () => null,
@@ -879,7 +879,7 @@ export function useInvoiceContextValue(): InvoiceContextData {
       deleteInvoice,
       isDeletingInvoice: _isDeletingInvoice,
       errorDeleteInvoice: _errorDeleteInvoice,
-      deletedInvoiceSuccess: _deletedInvoiceSuccess,
+      isDeletedInvoiceSuccess: _deletedInvoiceSuccess,
       getShareLink,
       isLoadingShareLink: _isLoadingShareLink,
       errorLoadShareLink: _errorLoadShareLink,
